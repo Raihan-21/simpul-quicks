@@ -51,10 +51,19 @@ const Quicks = () => {
     console.log("expand");
     // setIsExpanded((prevState) => !prevState);
   };
+  const addNewTask = async () => {
+    const newTask: task = {
+      id: Math.floor(Math.random() * 100),
+      title: "",
+      description: "",
+      completed: false,
+      dueDate: null,
+      createdAt: new Date(),
+    };
 
-  useEffect(() => {
-    console.log(isPoppedUp);
-  }, [isPoppedUp]);
+    setTaskList((prevState) => [...prevState, newTask]);
+  };
+
   return (
     <div className="fixed bottom-5 right-5 max-w-[600px] w-full flex justify-end">
       <FloatingAction
@@ -82,7 +91,7 @@ const Quicks = () => {
       </FloatingAction>
 
       {isPoppedUp && currentPopup === "tasks" && (
-        <div className="min-w-[300px] w-full min-h-[300px] bg-white absolute -top-[300px] right-0 px-[32px] py-[24px]">
+        <div className="min-w-[300px] w-full h-[300px] bg-white absolute -top-[300px] right-0 px-[32px] py-[24px] overflow-auto">
           <div className="flex justify-between gap-x-5">
             <Select>
               <SelectTrigger className="max-w-[100px]">
@@ -96,9 +105,14 @@ const Quicks = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Button className="bg-primary hover:bg-primary/75">New Task</Button>
+            <Button
+              className="bg-primary hover:bg-primary/75"
+              onClick={addNewTask}
+            >
+              New Task
+            </Button>
           </div>
-          <div className="mt-5">
+          <div className="mt-5 space-y-7">
             {taskList.length > 0 &&
               taskList.map((task, i) => <TaskItem data={task} key={i} />)}
           </div>

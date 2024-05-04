@@ -11,7 +11,7 @@ interface task {
   description?: string;
   completed: boolean;
   createdAt: Date;
-  dueDate: Date;
+  dueDate: Date | null;
 }
 
 export type { action, task };
