@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Button } from "../ui/button";
 
 const Quicks = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -55,7 +56,7 @@ const Quicks = () => {
     console.log(isPoppedUp);
   }, [isPoppedUp]);
   return (
-    <div className="fixed bottom-5 right-5 ">
+    <div className="fixed bottom-5 right-5 max-w-[600px] w-full flex justify-end">
       <FloatingAction
         bgColor="primary"
         // isExpanded={isExpanded}
@@ -81,11 +82,11 @@ const Quicks = () => {
       </FloatingAction>
 
       {isPoppedUp && currentPopup === "tasks" && (
-        <div className="min-w-[300px] min-h-[300px] bg-white absolute -top-[300px] right-0 px-[32px] py-[24px]">
-          <form>
+        <div className="min-w-[300px] w-full min-h-[300px] bg-white absolute -top-[300px] right-0 px-[32px] py-[24px]">
+          <div className="flex justify-between gap-x-5">
             <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="My tTsks" />
+              <SelectTrigger className="max-w-[100px]">
+                <SelectValue placeholder="My Tasks" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -95,7 +96,8 @@ const Quicks = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </form>
+            <Button className="bg-primary hover:bg-primary/75">New Task</Button>
+          </div>
           <div className="mt-5">
             {taskList.length > 0 &&
               taskList.map((task, i) => <TaskItem data={task} key={i} />)}

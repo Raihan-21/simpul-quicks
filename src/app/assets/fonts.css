@@ -1,0 +1,87 @@
+@font-face {
+  font-family: 'quicks';
+  src:  url('fonts/quicks.eot?6lga1h');
+  src:  url('fonts/quicks.eot?6lga1h#iefix') format('embedded-opentype'),
+    url('fonts/quicks.ttf?6lga1h') format('truetype'),
+    url('fonts/quicks.woff?6lga1h') format('woff'),
+    url('fonts/quicks.svg?6lga1h#quicks') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'quicks' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-copy:before {
+  content: "\e900";
+}
+.icon-answer-solid:before {
+  content: "\e902";
+}
+.icon-arrow-down:before {
+  content: "\e903";
+}
+.icon-arrow-left:before {
+  content: "\e904";
+}
+.icon-avatar:before {
+  content: "\e906";
+}
+.icon-bag:before {
+  content: "\e907";
+}
+.icon-bolt:before {
+  content: "\e908";
+}
+.icon-bookmark:before {
+  content: "\e909";
+}
+.icon-book:before {
+  content: "\e90b";
+}
+.icon-checkbox:before {
+  content: "\e90c";
+}
+.icon-checkbox-blank:before {
+  content: "\e90d";
+}
+.icon-clock:before {
+  content: "\e90e";
+}
+.icon-cross:before {
+  content: "\e90f";
+}
+.icon-desc:before {
+  content: "\e910";
+}
+.icon-pencil:before {
+  content: "\e911";
+}
+.icon-plus:before {
+  content: "\e912";
+}
+.icon-search:before {
+  content: "\e913";
+}
+.icon-star:before {
+  content: "\e914";
+}
+.icon-more:before {
+  content: "\e915";
+}
+.icon-menu:before {
+  content: "\e916";
+}

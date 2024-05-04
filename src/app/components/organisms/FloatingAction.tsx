@@ -17,7 +17,7 @@ const FloatingAction = ({
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   return (
-    <div className="">
+    <div className="relative ">
       <FloatingActionButton
         bgColor={bgColor}
         onClick={() => {
