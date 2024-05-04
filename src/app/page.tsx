@@ -14,7 +14,7 @@ export default function Home() {
     console.log("expand");
   };
   return (
-    <main className=" min-h-[100vh]">
+    <main className=" min-h-[100vh] bg-dark-gray">
       <Image
         src={"/icons/icon-bolt.svg"}
         width={24}

@@ -17,7 +17,7 @@ const FloatingAction = ({
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   return (
-    <div className="fixed bottom-5 right-5 ">
+    <div className="">
       <FloatingActionButton
         bgColor={bgColor}
         onClick={() => {
@@ -33,19 +33,19 @@ const FloatingAction = ({
           alt="icon-bolt"
         />
       </FloatingActionButton>
-      <div className="min-w-[300px] bg-white"></div>
       <div
         className={` ${
           isExpanded ? "-left-[100%]" : ""
         } absolute top-0  flex justify-center items-center `}
       >
         {actions.length > 0 &&
-          actions.map((action) => (
+          actions.map((action, i) => (
             <FloatingActionButton
               bgColor={action.buttonColor}
               onClick={() => {
                 action.onClick();
               }}
+              key={i}
             >
               <Image src={action.icon} width={24} height={24} alt="icon-bolt" />
             </FloatingActionButton>
