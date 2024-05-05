@@ -15,81 +15,184 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import axiosInstance from "@/app/axios";
 
-const TaskItem = ({ data }: { data: task }) => {
+const TaskItem = ({
+  data,
+  onDelete,
+  onCheck,
+  onChangeType,
+}: {
+  data: task;
+  onDelete: (id: number) => void;
+  onCheck: (id: number) => void;
+  onChangeType: (id: number, type: string) => void;
+}) => {
   const [taskData, setTaskData] = useState<task>(data);
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [dueDate, setDueDate] = useState<Date>(data.dueDate!);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(true);
+  const [errors, setErrors] = useState({
+    title: "",
+    dueDate: "",
+  });
 
   const onDueDateChange = (value: any) => {
     setDueDate(value);
   };
 
+  const validateField = () => {
+    let isValid = true;
+    if (!taskData.title) {
+      isValid = false;
+      setErrors((prevState) => ({
+        ...prevState,
+        title: "Please fill the title field",
+      }));
+    }
+    // if (!taskData.dueDate) {
+    //   setIsError(true);
+    //   setErrors((prevState) => ({
+    //     ...prevState,
+    //     dueDate: "Please select the due date",
+    //   }));
+    // }
+    return isValid;
+  };
+
+  const saveTask = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const isValid = validateField();
+      if (!isValid) {
+        setIsError(true);
+        return;
+      }
+      setIsError(false);
+      setErrors({ title: "", dueDate: "" });
+
+      setTaskData((prevState) => ({ ...prevState, isNew: false }));
+
+      const res = await axiosInstance.post("/api/task", taskData);
+      setIsEditing(false);
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  };
+  const deleteTask = () => {
+    onDelete(taskData.id);
+  };
+  const checkTask = () => {
+    onCheck(taskData.id);
+    setIsChecked((prevState) => !prevState);
+  };
+  const changeType = () => {};
   return (
-    <div className="flex gap-x-5">
-      <Checkbox
-        checked={isChecked}
-        onClick={() => setIsChecked((prevState) => !prevState)}
-      />
-      <div className="flex-grow space-y-3">
-        <div className="flex justify-between">
-          <div className="font-bold">
-            {taskData.title ? (
-              <div>{taskData.title}</div>
+    <div className="flex gap-x-5 border-b-[1px] border-gray py-[22px] text-dark-gray">
+      <Checkbox checked={isChecked} onClick={checkTask} />
+      <div className="flex-grow ">
+        <form onSubmit={saveTask} className="space-y-3">
+          <div className="flex justify-between items-start">
+            <div>
+              {!taskData.isNew ? (
+                <div
+                  className={`font-bold ${
+                    (taskData.completed || isChecked) && "line-through"
+                  }`}
+                >
+                  {taskData.title}
+                </div>
+              ) : (
+                <>
+                  <Input
+                    className="mb-3"
+                    value={taskData.title}
+                    onChange={(e) =>
+                      setTaskData((prevState) => ({
+                        ...prevState,
+                        title: e.target.value,
+                      }))
+                    }
+                  />
+                  {errors.title && (
+                    <div className="text-red-500">{errors.title}</div>
+                  )}
+                </>
+              )}
+            </div>
+            <div className="flex items-center">
+              <div>{moment(taskData.createdAt).format("DD/MM/YYYY")}</div>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <i className="icon-more"></i>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={changeType}
+                    >
+                      Set to{" "}
+                      {taskData.type === "personal"
+                        ? "Urgent To-Do"
+                        : "Personal Errands"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="cursor-pointer text-red-600"
+                      onClick={deleteTask}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+          <div className="flex items-center gap-x-3">
+            <i
+              className={`icon-clock  ${
+                taskData.dueDate ? "text-primary" : ""
+              } `}
+            ></i>
+            <Datepicker value={dueDate} onChange={setDueDate} />
+          </div>
+          <div className="flex items-start gap-x-3">
+            <i
+              className={`icon-pencil ${!isEditing ? "cursor-pointer" : ""} ${
+                data.description ? "text-primary" : ""
+              } `}
+              onClick={() => setIsEditing(true)}
+            ></i>
+            {isEditing ? (
+              <div className="flex flex-col items-end gap-y-3 flex-grow">
+                <Textarea
+                  className="w-full"
+                  value={taskData.description}
+                  onChange={(e) =>
+                    setTaskData((prevState) => ({
+                      ...prevState,
+                      description: e.target.value,
+                    }))
+                  }
+                />
+              </div>
             ) : (
-              <Input
-                value={taskData.title}
-                onChange={(e) =>
-                  setTaskData((prevState) => ({
-                    ...prevState,
-                    title: e.target.value,
-                  }))
-                }
-              />
+              <div>
+                {taskData.description ? taskData.description : "No description"}
+              </div>
             )}
           </div>
-          <div className="flex items-center">
-            <div>{moment(taskData.createdAt).format("DD/MM/YYYY")}</div>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <i className="icon-more"></i>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuGroup>
-                  <DropdownMenuItem className="cursor-pointer text-red-600">
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-        <div className="flex items-center gap-x-3">
-          <i
-            className={`icon-clock  ${taskData.dueDate ? "text-primary" : ""} `}
-          ></i>
-          <Datepicker value={dueDate} onChange={setDueDate} />
-        </div>
-        <div className="flex items-start gap-x-3">
-          <i
-            className={`icon-pencil cursor-pointer ${
-              data.description ? "text-primary" : ""
-            } `}
-            onClick={() => setIsEditing((prevState) => !prevState)}
-          ></i>
-          {isEditing ? (
-            <div className="flex flex-col items-end gap-y-3 flex-grow">
-              <Textarea className="w-full" value={data.description} />
-              <Button className="bg-primary hover:bg-primary/75">Save</Button>
+          {(isEditing || taskData.isNew) && (
+            <div className="flex justify-end">
+              <Button type="submit" className="bg-primary hover:bg-primary/75">
+                Save
+              </Button>
             </div>
-          ) : (
-            <div>{data.description}</div>
           )}
-        </div>
+        </form>
       </div>
-      {/* <Calendar value={data.dueDate} onChange={onDueDateChange} /> */}
     </div>
   );
 };

@@ -9,6 +9,8 @@ interface task {
   id: number;
   title: string;
   description?: string;
+  isNew?: boolean;
+  type: string;
   completed: boolean;
   createdAt: Date;
   dueDate: Date | null;
