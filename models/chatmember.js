@@ -16,17 +16,15 @@ module.exports = (sequelize, DataTypes) => {
       idUser: {
         type: DataTypes.INTEGER,
         references: {
-          model: "users",
+          model: "User",
           key: "id",
-          as: "idUser",
         },
       },
       idChatSession: {
         type: DataTypes.INTEGER,
         references: {
-          model: "chat_sessions",
+          model: "ChatSession",
           key: "id",
-          as: "idChatSession",
         },
       },
     },
