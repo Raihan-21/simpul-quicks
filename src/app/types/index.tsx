@@ -37,6 +37,7 @@ interface ChatMessage {
   id: number;
   idUser: number;
   content: string;
+  idMessage?: string;
 }
 
 export type { Action, Task, User, ChatSession, ChatMember, ChatMessage };
