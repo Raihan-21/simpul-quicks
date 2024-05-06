@@ -28,12 +28,14 @@ const TaskItem = ({
   onCheck: (id: number) => void;
   onChangeType: (id: number, type: string) => void;
 }) => {
-  const [taskData, setTaskData] = useState<task>(data);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const [taskData, setTaskData] = useState<task>(data);
   const [dueDate, setDueDate] = useState<Date>(data.dueDate!);
 
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(true);
   const [errors, setErrors] = useState({
     title: "",
     dueDate: "",
@@ -62,8 +64,7 @@ const TaskItem = ({
     return isValid;
   };
 
-  const saveTask = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const saveTask = async () => {
     try {
       const isValid = validateField();
       if (!isValid) {
@@ -81,6 +82,31 @@ const TaskItem = ({
       console.log(error.response.data);
     }
   };
+
+  const updateTask = async () => {
+    try {
+      const res = await axiosInstance.put(`/api/task/${taskData.id}`, taskData);
+      console.log(res);
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  };
+
+  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      if (!taskData.isNew) {
+        await updateTask();
+        return;
+      }
+      await saveTask();
+    } catch (error) {
+    } finally {
+      setIsSubmitting(false);
+      setIsEditing(false);
+    }
+  };
   const deleteTask = () => {
     onDelete(taskData.id);
   };
@@ -93,7 +119,7 @@ const TaskItem = ({
     <div className="flex gap-x-5 border-b-[1px] border-gray py-[22px] text-dark-gray">
       <Checkbox checked={isChecked} onClick={checkTask} />
       <div className="flex-grow ">
-        <form onSubmit={saveTask} className="space-y-3">
+        <form onSubmit={submitForm} className="space-y-3">
           <div className="flex justify-between items-start">
             <div>
               {!taskData.isNew ? (
@@ -186,8 +212,12 @@ const TaskItem = ({
           </div>
           {(isEditing || taskData.isNew) && (
             <div className="flex justify-end">
-              <Button type="submit" className="bg-primary hover:bg-primary/75">
-                Save
+              <Button
+                type="submit"
+                className="bg-primary hover:bg-primary/75"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Loading" : "Save"}
               </Button>
             </div>
           )}
