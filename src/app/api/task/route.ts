@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       description,
       type,
       completed,
-      dueDate,
+      dueDate: new Date(),
     });
     return Response.json({ data: res });
   } catch (error) {

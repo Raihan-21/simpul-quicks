@@ -12,15 +12,15 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    return await queryInterface.bulkInsert("Tasks", [
+    return await queryInterface.bulkInsert("tasks", [
       {
         title: "Quicks test",
         description: "Finish foundation section",
         type: "personal",
         completed: false,
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        due_date: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
       },
     ]);
   },
