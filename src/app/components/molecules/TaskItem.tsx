@@ -1,4 +1,4 @@
-import { task } from "@/app/types";
+import { Task } from "@/app/types";
 // import { Checkbox } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
@@ -23,12 +23,12 @@ const TaskItem = ({
   onCheck,
   onChangeType,
 }: {
-  data: task;
+  data: Task;
   onDelete: (id: number) => void;
   onCheck: (id: number, completed: boolean) => void;
   onChangeType: (id: number, type: string) => void;
 }) => {
-  const [taskData, setTaskData] = useState<task>(data);
+  const [taskData, setTaskData] = useState<Task>(data);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState<boolean>(taskData.completed);

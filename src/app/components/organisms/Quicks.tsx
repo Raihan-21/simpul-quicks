@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import FloatingAction from "@/app/components/organisms/FloatingAction";
 import FloatingActionButton from "@/app/components/atoms/FloatingActionButton";
-import { action, task } from "@/app/types";
+import { Action, Task } from "@/app/types";
 import TaskItem from "../molecules/TaskItem";
 import {
   Select,
@@ -16,6 +16,7 @@ import {
 import { Button } from "../ui/button";
 import axiosInstance from "@/app/axios";
 import { ScrollArea } from "../ui/scroll-area";
+import ChatWindow from "./ChatWindow";
 
 const Quicks = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -24,7 +25,7 @@ const Quicks = () => {
   const [currentPopup, setCurrentPopup] = useState<string>("");
 
   // const [filterTask, setFilterTask] = useState<string>("");
-  const [taskList, setTaskList] = useState<task[]>([
+  const [taskList, setTaskList] = useState<Task[]>([
     // {
     //   id: 1,
     //   title: "Task 1",
@@ -35,7 +36,7 @@ const Quicks = () => {
     //   createdAt: new Date(),
     // },
   ]);
-  const [filteredTask, setFilteredTask] = useState<task[]>(taskList);
+  const [filteredTask, setFilteredTask] = useState<Task[]>(taskList);
   // const [search, setsearch] = useState(second)
 
   const [currentFilter, setCurrentFilter] = useState<string>("all");
@@ -44,12 +45,22 @@ const Quicks = () => {
     setCurrentPopup("tasks");
     setIsPoppedUp((prevState) => !prevState);
   };
-  const [actions, setActions] = useState<action[]>([
+  const showMessageWindow = () => {
+    setCurrentPopup("chats");
+    setIsPoppedUp((prevState) => !prevState);
+  };
+  const [actions, setActions] = useState<Action[]>([
     {
       id: "tasks",
       icon: "/icons/icon-bookmark.svg",
       buttonColor: "light-gray",
       onClick: onTaskClick,
+    },
+    {
+      id: "chats",
+      icon: "/icons/icon-bookmark.svg",
+      buttonColor: "light-gray",
+      onClick: showMessageWindow,
     },
   ]);
 
@@ -77,7 +88,7 @@ const Quicks = () => {
         setFilteredTask(res.data.data);
       } else
         setFilteredTask(
-          res.data.data.filter((task: task) => task.type === currentFilter)
+          res.data.data.filter((task: Task) => task.type === currentFilter)
         );
     } catch (error: any) {
       console.log(error.response.data);
@@ -88,7 +99,7 @@ const Quicks = () => {
 
   const addNewTask = async () => {
     try {
-      const newTask: task = {
+      const newTask: Task = {
         id: Math.floor(Math.random() * 100),
         title: "",
         description: "",
@@ -232,6 +243,7 @@ const Quicks = () => {
           </div>
         </ScrollArea>
       )}
+      {isPoppedUp && currentPopup === "chats" && <ChatWindow />}
     </div>
   );
 };

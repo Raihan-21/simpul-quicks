@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { ReactElement, ReactNode, useState } from "react";
 import FloatingActionButton from "../atoms/FloatingActionButton";
-import { action } from "@/app/types";
+import { Action } from "@/app/types";
 
 const FloatingAction = ({
   bgColor = "primary",
@@ -11,7 +11,7 @@ const FloatingAction = ({
   onClick,
 }: {
   bgColor?: string;
-  actions: action[];
+  actions: Action[];
   onClick: () => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -35,8 +35,8 @@ const FloatingAction = ({
       </FloatingActionButton>
       <div
         className={` ${
-          isExpanded ? "-left-[100%]" : ""
-        } absolute top-0  flex justify-center items-center `}
+          isExpanded ? `opacity-1 -left-[${2 * 100}%]` : "opacity-0"
+        } absolute top-0  flex flex-row-reverse justify-center items-center `}
       >
         {actions.length > 0 &&
           actions.map((action, i) => (
