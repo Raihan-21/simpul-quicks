@@ -12,9 +12,16 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    return await queryInterface.bulkInsert("users", [
+    return await queryInterface.bulkInsert("chat_members", [
       {
-        name: "FastVisa Support",
+        id_user: 3,
+        id_chat_session: 1,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        id_user: 4,
+        id_chat_session: 1,
         created_at: new Date(),
         updated_at: new Date(),
       },
