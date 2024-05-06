@@ -25,15 +25,16 @@ const TaskItem = ({
 }: {
   data: task;
   onDelete: (id: number) => void;
-  onCheck: (id: number) => void;
+  onCheck: (id: number, completed: boolean) => void;
   onChangeType: (id: number, type: string) => void;
 }) => {
+  const [taskData, setTaskData] = useState<task>(data);
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(taskData.completed);
   const [isError, setIsError] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const [taskData, setTaskData] = useState<task>(data);
   const [dueDate, setDueDate] = useState<Date>(data.dueDate!);
 
   const [errors, setErrors] = useState({
@@ -43,6 +44,31 @@ const TaskItem = ({
 
   const onDueDateChange = (value: any) => {
     setDueDate(value);
+  };
+  const checkTask = async () => {
+    setTaskData((prevState) => ({
+      ...prevState,
+      completed: !prevState.completed,
+    }));
+    try {
+      const res = await axiosInstance.put(`/api/task/${taskData.id}/check`, {
+        completed: !taskData.completed,
+      });
+    } catch (error: any) {
+      console.log(error.response.data.data);
+    }
+  };
+
+  const changeType = async () => {
+    try {
+      const type = taskData.type === "urgent" ? "personal" : "urgent";
+      const res = await axiosInstance.put(`/api/task/${taskData.id}/type`, {
+        type,
+      });
+      onChangeType(taskData.id, type);
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
   };
 
   const validateField = () => {
@@ -86,7 +112,6 @@ const TaskItem = ({
   const updateTask = async () => {
     try {
       const res = await axiosInstance.put(`/api/task/${taskData.id}`, taskData);
-      console.log(res);
     } catch (error: any) {
       console.log(error.response.data);
     }
@@ -107,17 +132,22 @@ const TaskItem = ({
       setIsEditing(false);
     }
   };
-  const deleteTask = () => {
-    onDelete(taskData.id);
+  const deleteTask = async () => {
+    try {
+      const res = await axiosInstance.delete(`/api/task/delete/${taskData.id}`);
+      onDelete(taskData.id);
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
   };
-  const checkTask = () => {
-    onCheck(taskData.id);
-    setIsChecked((prevState) => !prevState);
-  };
-  const changeType = () => {};
+
+  // useEffect(() => {
+  //   updateTaskStatus();
+  // }, [isChecked]);
+
   return (
     <div className="flex gap-x-5 border-b-[1px] border-gray py-[22px] text-dark-gray">
-      <Checkbox checked={isChecked} onClick={checkTask} />
+      <Checkbox checked={taskData.completed} onClick={checkTask} />
       <div className="flex-grow ">
         <form onSubmit={submitForm} className="space-y-3">
           <div className="flex justify-between items-start">
@@ -125,7 +155,7 @@ const TaskItem = ({
               {!taskData.isNew ? (
                 <div
                   className={`font-bold ${
-                    (taskData.completed || isChecked) && "line-through"
+                    taskData.completed && "line-through"
                   }`}
                 >
                   {taskData.title}

@@ -108,11 +108,11 @@ const Quicks = () => {
     setTaskList(taskList.filter((task) => task.id !== id));
     fetchTask();
   };
-  const onTaskCheck = (id: number) => {
-    setTaskList(
-      taskList.map((task) => {
+  const onTaskCheck = (id: number, value: boolean) => {
+    setFilteredTask(
+      filteredTask.map((task) => {
         if (task.id === id) {
-          return { ...task, completed: true };
+          return { ...task, completed: value };
         }
         return { ...task };
       })
@@ -125,7 +125,7 @@ const Quicks = () => {
     //     return { ...task };
     //   })
     // );
-    fetchTask();
+    // fetchTask();
   };
   const onTaskTypeChange = (id: number, type: string) => {
     setTaskList(
@@ -188,7 +188,7 @@ const Quicks = () => {
       </FloatingAction>
 
       {isPoppedUp && currentPopup === "tasks" && (
-        <div className="min-w-[300px] w-full h-[300px] bg-white absolute -top-[300px] right-0 px-[32px] py-[24px] overflow-auto">
+        <div className="min-w-[300px] w-full h-[300px] bg-white rounded-md absolute -top-[300px] right-0 px-[32px] py-[24px] overflow-auto">
           <div className="flex justify-between gap-x-5">
             <Select onValueChange={filterTask}>
               <SelectTrigger className="max-w-[100px]">
