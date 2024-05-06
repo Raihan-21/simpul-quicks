@@ -15,6 +15,7 @@ import {
 } from "../ui/select";
 import { Button } from "../ui/button";
 import axiosInstance from "@/app/axios";
+import { ScrollArea } from "../ui/scroll-area";
 
 const Quicks = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -188,46 +189,48 @@ const Quicks = () => {
       </FloatingAction>
 
       {isPoppedUp && currentPopup === "tasks" && (
-        <div className="min-w-[300px] w-full h-[300px] bg-white rounded-md absolute -top-[300px] right-0 px-[32px] py-[24px] overflow-auto">
-          <div className="flex justify-between gap-x-5">
-            <Select onValueChange={filterTask}>
-              <SelectTrigger className="max-w-[100px]">
-                <SelectValue placeholder="My Tasks" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="all">My Tasks</SelectItem>
-                  <SelectItem value="personal">Personal Errands</SelectItem>
-                  <SelectItem value="urgent">Urgent To-Do</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Button
-              className="bg-primary hover:bg-primary/75"
-              onClick={addNewTask}
-            >
-              New Task
-            </Button>
+        <ScrollArea className="min-w-[300px] w-full h-[300px] bg-white rounded-md !absolute -top-[300px] right-0">
+          <div className=" px-[32px] py-[24px]">
+            <div className="flex justify-between gap-x-5">
+              <Select onValueChange={filterTask}>
+                <SelectTrigger className="max-w-[100px]">
+                  <SelectValue placeholder="My Tasks" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="all">My Tasks</SelectItem>
+                    <SelectItem value="personal">Personal Errands</SelectItem>
+                    <SelectItem value="urgent">Urgent To-Do</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button
+                className="bg-primary hover:bg-primary/75"
+                onClick={addNewTask}
+              >
+                New Task
+              </Button>
+            </div>
+            <div className="mt-[22px]">
+              {isLoading ? (
+                <div className="flex justify-center">Loading</div>
+              ) : (
+                <>
+                  {filteredTask.length > 0 &&
+                    filteredTask.map((task, i) => (
+                      <TaskItem
+                        data={task}
+                        key={i}
+                        onDelete={onTaskDelete}
+                        onCheck={onTaskCheck}
+                        onChangeType={onTaskTypeChange}
+                      />
+                    ))}
+                </>
+              )}
+            </div>
           </div>
-          <div className="mt-[22px]">
-            {isLoading ? (
-              <div className="flex justify-center">Loading</div>
-            ) : (
-              <>
-                {filteredTask.length > 0 &&
-                  filteredTask.map((task, i) => (
-                    <TaskItem
-                      data={task}
-                      key={i}
-                      onDelete={onTaskDelete}
-                      onCheck={onTaskCheck}
-                      onChangeType={onTaskTypeChange}
-                    />
-                  ))}
-              </>
-            )}
-          </div>
-        </div>
+        </ScrollArea>
       )}
     </div>
   );
