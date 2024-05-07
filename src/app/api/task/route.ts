@@ -5,7 +5,7 @@ const Task = taskModel(sequelize, Sequelize.DataTypes);
 
 export async function GET(req: Request) {
   try {
-    const res = await Task.findAll();
+    const res = await Task.findAll({ order: [["created_at", "ASC"]] });
     return Response.json({ data: res });
   } catch (error: any) {
     return Response.json({ error }, { status: 500 });
@@ -28,9 +28,4 @@ export async function POST(req: Request) {
     console.log(error);
     return Response.json({ error }, { status: 500 });
   }
-  // try {
-  //   const res = await Task.create()
-  // } catch (error) {
-
-  // }
 }

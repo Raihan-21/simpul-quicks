@@ -12,12 +12,14 @@ import { Quick } from "@/app/types";
 const Quicks = ({
   bgColor = "primary",
   actions,
-  onClick,
+  onOpen,
+  onTabClose,
   onClose,
 }: {
   bgColor?: string;
   actions: Quick[];
-  onClick: () => void;
+  onOpen: () => void;
+  onTabClose: () => void;
   onClose: () => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -40,7 +42,7 @@ const Quicks = ({
           setIsExpanded((prevState) => !prevState);
           setIsQuickClicked(false);
           setActiveQuick(undefined);
-          onClick();
+          onOpen();
           onClose();
         }}
         className="relative z-[1]"
