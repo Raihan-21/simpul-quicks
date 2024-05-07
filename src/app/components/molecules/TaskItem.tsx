@@ -1,13 +1,18 @@
-import { Task } from "@/app/types";
-// import { Checkbox } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import { Checkbox } from "../ui/checkbox";
-import Datepicker from "../organisms/Datepicker";
+
+/**
+ * Types
+ */
+
+import { Task } from "@/app/types";
+
 import moment from "moment";
+
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +20,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+
+/**
+ * Axios Config
+ */
 import axiosInstance from "@/app/axios";
+
+/**
+ * Custom Components
+ */
+
+import Datepicker from "../organisms/Datepicker";
 
 const TaskItem = ({
   data,

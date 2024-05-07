@@ -1,7 +1,7 @@
 import Image from "next/image";
-import FloatingAction from "./components/organisms/FloatingAction";
-import FloatingActionButton from "./components/atoms/FloatingActionButton";
-import Quicks from "./components/organisms/Quicks";
+import FloatingAction from "./components/organisms/Quicks";
+import FloatingActionButton from "./components/atoms/QuickButton";
+import Quicks from "./components/organisms/QuicksContainer";
 
 export default function Home() {
   const onTaskClick = async () => {
@@ -14,7 +14,7 @@ export default function Home() {
     console.log("expand");
   };
   return (
-    <main className=" min-h-[100vh] bg-dark-gray">
+    <main className=" min-h-[100vh] bg-black">
       <Image
         src={"/icons/icon-bolt.svg"}
         width={24}

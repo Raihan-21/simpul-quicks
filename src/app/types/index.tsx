@@ -1,6 +1,8 @@
-interface Action {
+interface Quick {
+  index: number;
   id: string;
   icon: string;
+  iconColor: string;
   buttonColor: string;
   onClick: () => void;
 }
@@ -40,4 +42,4 @@ interface ChatMessage {
   idMessage?: string;
 }
 
-export type { Action, Task, User, ChatSession, ChatMember, ChatMessage };
+export type { Quick, Task, User, ChatSession, ChatMember, ChatMessage };

@@ -1,8 +1,14 @@
 import React, { RefObject, useEffect, useRef, useState } from "react";
+
 import { ScrollArea } from "../ui/scroll-area";
-import ChatBubble from "../molecules/ChatBubble";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+
+/**
+ * Custom Components
+ */
+
+import ChatBubble from "../molecules/ChatBubble";
 
 const ChatDetail = ({
   id,

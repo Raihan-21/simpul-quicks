@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
+
+/**
+ * Custom Components
+ */
 import ChatItem from "../molecules/ChatItem";
 import ChatDetail from "./ChatDetail";
 
