@@ -31,7 +31,7 @@ const QuicksContainer = () => {
       index: 1,
       id: "tasks",
       icon: "icon-bookmark",
-      iconColor: "brown",
+      iconColor: "main-orange",
       buttonColor: "light-gray",
       onClick: onTaskClick,
     },
@@ -39,7 +39,7 @@ const QuicksContainer = () => {
       index: 2,
       id: "chats",
       icon: "icon-answer-solid",
-      iconColor: "purple",
+      iconColor: "main-purple",
       buttonColor: "light-gray",
       onClick: showMessageWindow,
     },
@@ -47,7 +47,7 @@ const QuicksContainer = () => {
       index: 3,
       id: "search",
       icon: "icon-search",
-      iconColor: "purple",
+      iconColor: "main-purple",
       buttonColor: "light-gray",
       onClick: showMessageWindow,
     },
@@ -68,7 +68,6 @@ const QuicksContainer = () => {
     <div className="fixed bottom-5 right-5 max-w-[600px] w-full flex justify-end">
       <Quicks
         bgColor="primary"
-        // isExpanded={isExpanded}
         actions={actions}
         onOpen={openQuicks}
         onTabClose={closeTab}

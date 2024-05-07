@@ -54,7 +54,7 @@ const ChatWindow = () => {
   return (
     <div>
       {activeTab === "list" ? (
-        <ScrollArea className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[500px] right-0">
+        <ScrollArea className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[515px] right-0">
           <div className=" px-[32px] py-[24px]">
             <div>
               <div className="relative">

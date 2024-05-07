@@ -16,7 +16,9 @@ const FloatingActionButton = ({
 } & HTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
-      className={`bg-${bgColor} flex justify-center items-center  rounded-full w-[56px] h-[56px] ${className}`}
+      className={`bg-${bgColor} flex justify-center items-center  rounded-full w-[56px] h-[56px] ${
+        className ?? ""
+      }`}
       onClick={onClick}
       {...props}
     >

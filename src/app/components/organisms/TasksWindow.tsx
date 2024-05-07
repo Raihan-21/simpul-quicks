@@ -140,7 +140,7 @@ const TasksWindow = () => {
   }, [currentFilter]);
 
   return (
-    <ScrollArea className="min-w-[300px] w-full h-[300px] bg-white rounded-md !absolute -top-[300px] right-0">
+    <ScrollArea className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[515px] right-0">
       <div className=" px-[32px] py-[24px]">
         <div className="flex justify-between gap-x-5">
           <Select onValueChange={filterTask}>

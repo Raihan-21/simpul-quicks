@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ReactElement, ReactNode, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 /**
  * Custom Components
@@ -28,55 +29,86 @@ const Quicks = ({
 
   const calculateQuickGaps = (id: string, index: number) => {
     const quickSpace = "56px + 20px";
-    if (activeQuick?.id === id) return `30%`;
+    if (activeQuick?.id === id) return `0`;
     if (isQuickClicked && index > activeQuick!.index)
       return `calc(-${index} * (${quickSpace}) + ${quickSpace}`;
     return `calc(-${index} * (${quickSpace})`;
   };
+  const calculateQuickGapsAnimation = (id: string, index: number) => {
+    const quickSpace = 56 + 20;
+    if (activeQuick?.id === id) return 0;
+    if (isQuickClicked && index > activeQuick!.index)
+      return -index * quickSpace + quickSpace;
+    return -index * quickSpace;
+  };
 
   return (
     <div className="relative ">
-      <QuickButton
-        bgColor={isQuickClicked ? "dark-gray" : bgColor}
-        onClick={() => {
-          setIsExpanded((prevState) => !prevState);
-          setIsQuickClicked(false);
-          setActiveQuick(undefined);
-          onOpen();
-          onClose();
+      <motion.div
+        className="relative"
+        animate={{
+          x: isQuickClicked ? "-20%" : "0",
+          zIndex: isQuickClicked ? 1 : 3,
         }}
-        className="relative z-[1]"
       >
-        <i className="icon-bolt text-2xl text-white"></i>
-      </QuickButton>
-      <div
-        className={`${
-          isExpanded ? `opacity-1 ` : "opacity-0"
-        } flex flex-row-reverse justify-center items-center`}
+        <QuickButton
+          bgColor={isQuickClicked ? "dark-gray" : bgColor}
+          onClick={() => {
+            setIsExpanded((prevState) => !prevState);
+            setIsQuickClicked(false);
+            setActiveQuick(undefined);
+            onOpen();
+            onClose();
+          }}
+          className={`relative`}
+        >
+          <i className="icon-bolt text-2xl text-white"></i>
+        </QuickButton>
+      </motion.div>
+
+      <AnimatePresence
+      // className={`${
+      //   isExpanded ? `opacity-1 ` : "opacity-0"
+      // } flex flex-row-reverse justify-center items-center`}
       >
-        {actions.length > 0 &&
-          actions.map((action, i) => (
-            <div
-              className={`absolute top-0 z-[2]`}
-              style={{ left: calculateQuickGaps(action.id, action.index) }}
-              key={i}
-            >
-              <QuickButton
-                bgColor="white"
-                onClick={() => {
-                  setIsQuickClicked(true);
-                  setActiveQuick(action);
-                  action.onClick();
-                }}
-              >
-                <i
-                  className={`${action.icon} text-2xl text-${action.iconColor}`}
-                ></i>
-              </QuickButton>
-            </div>
-          ))}
-        {/* {children} */}
-      </div>
+        {isExpanded && (
+          <motion.div>
+            {actions.length > 0 &&
+              actions.map((action, i) => (
+                <motion.div
+                  className={`absolute top-0 z-[2]`}
+                  initial={{ left: 0 }}
+                  animate={{
+                    left: calculateQuickGapsAnimation(action.id, action.index),
+                  }}
+                  exit={{ left: 0 }}
+                  // style={{ left: calculateQuickGaps(action.id, action.index) }}
+                  key={action.id}
+                >
+                  <QuickButton
+                    bgColor={`${
+                      activeQuick?.id === action.id ? action.iconColor : "white"
+                    }`}
+                    onClick={() => {
+                      setIsQuickClicked(true);
+                      setActiveQuick(action);
+                      action.onClick();
+                    }}
+                  >
+                    <i
+                      className={`text-2xl ${action.icon}  text-${
+                        activeQuick?.id === action.id
+                          ? "white"
+                          : action.iconColor
+                      }`}
+                    ></i>
+                  </QuickButton>
+                </motion.div>
+              ))}
+            {/* {children} */}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
