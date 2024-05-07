@@ -25,6 +25,11 @@ const config = {
         "dark-gray": "#4F4F4F",
         gray: "#828282",
         "light-gray": "#E0E0E0",
+        brown: "#E5A443",
+        "light-brown": "#FCEED3",
+        purple: "#9B51E0",
+        "light-purple": "#EEDCFF",
+        "second-white": "#F2F2F2",
       },
       keyframes: {
         "accordion-down": {
