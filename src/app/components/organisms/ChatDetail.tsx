@@ -85,8 +85,12 @@ const ChatDetail = ({
       <ScrollArea className="chat-area flex-grow pt-5 h-[calc(100%-173px)]  px-[32px] pt-[24px]">
         <div className="space-y-5">
           {messageData.length > 0 &&
-            messageData.map((data) => (
-              <ChatBubble data={data} isSender={data.createdBy === "you"} />
+            messageData.map((data, i) => (
+              <ChatBubble
+                data={data}
+                isSender={data.createdBy === "you"}
+                key={i}
+              />
             ))}
         </div>
         <div ref={chatArea} className="h-0"></div>

@@ -59,6 +59,7 @@ const Quicks = ({
             <div
               className={`absolute top-0 z-[2]`}
               style={{ left: calculateQuickGaps(action.id, action.index) }}
+              key={i}
             >
               <QuickButton
                 bgColor="white"
@@ -67,7 +68,6 @@ const Quicks = ({
                   setActiveQuick(action);
                   action.onClick();
                 }}
-                key={i}
               >
                 <i
                   className={`${action.icon} text-2xl text-${action.iconColor}`}
