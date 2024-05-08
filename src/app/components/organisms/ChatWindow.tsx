@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import ClipLoader from "react-spinners/ClipLoader";
+
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
 
@@ -9,32 +11,13 @@ import { Input } from "../ui/input";
 import ChatItem from "../molecules/ChatItem";
 import ChatDetail from "./ChatDetail";
 import axiosInstance from "@/app/axios";
+import { ChatSession } from "@/app/types";
 
 const ChatWindow = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
-  const [chats, setChats] = useState([
-    {
-      id: 1,
-      image: null,
-      title: "Simpul",
-      createdAt: new Date(),
-      lastMessage: {
-        name: "Ellen",
-        content: "Hey there! Welcome to your inbox.",
-      },
-    },
-    {
-      id: 2,
-      image: null,
-      title: "Simpul",
-      createdAt: new Date(),
-      lastMessage: {
-        name: "Ellen",
-        content: "Hey there! Welcome to your inbox.",
-      },
-    },
-  ]);
+  const [chats, setChats] = useState<ChatSession[]>([]);
+  const [filteredChats, setFilteredChats] = useState<ChatSession[]>([]);
 
   const [isDetail, setIsDetail] = useState<boolean>(false);
   const [selectedChat, setSelectedChat] = useState<number>();
@@ -45,6 +28,15 @@ const ChatWindow = () => {
     setActiveTab("detail");
   };
 
+  const searchChat = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFilteredChats(
+      chats.filter((chat) => {
+        if (!search) return chat;
+        return chat.name?.toLowerCase().includes(search);
+      })
+    );
+  };
   const back = () => {
     setActiveTab("list");
   };
@@ -59,6 +51,7 @@ const ChatWindow = () => {
       try {
         const res = await axiosInstance.get(`/api/chat//list/4`);
         setChats(res.data.data);
+        setFilteredChats(res.data.data);
       } catch (error: any) {
         console.log(error.response.data);
       } finally {
@@ -75,19 +68,28 @@ const ChatWindow = () => {
           <div className=" px-[32px] py-[24px]">
             <div>
               <div className="relative">
-                <Input
-                  placeholder="Search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
+                <form onSubmit={searchChat}>
+                  <Input
+                    placeholder="Search"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </form>
                 <i className="icon-search absolute top-3 right-3"></i>
               </div>
               {isLoading ? (
-                <div>Loading...</div>
+                <div
+                  className="flex flex-col items-center justify-center gap-y-3 mt-[22px]"
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                >
+                  <ClipLoader color="#C4C4C4" size={50} />
+                  Loading chats...
+                </div>
               ) : (
                 <div>
-                  {chats.length > 0 &&
-                    chats.map((chat, i) => (
+                  {filteredChats.length > 0 &&
+                    filteredChats.map((chat, i) => (
                       <div
                         className="cursor-pointer"
                         onClick={() => clickDetail(chat.id)}

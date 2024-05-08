@@ -27,8 +27,11 @@ interface User {
 
 interface ChatSession {
   id: number;
+  lastMessage: ChatMessage;
+  members: any;
   name?: string;
-  createdAt: Date;
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface ChatMember {
