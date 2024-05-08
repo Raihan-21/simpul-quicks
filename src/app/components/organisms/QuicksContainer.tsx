@@ -66,6 +66,7 @@ const QuicksContainer = () => {
 
   return (
     <div className="fixed bottom-5 right-5 max-w-[600px] w-full flex justify-end">
+      <div className="hidden text-main-purple text-main-orange bg-main-purple bg-main-orange bg-dark-gray"></div>
       <Quicks
         bgColor="primary"
         actions={actions}

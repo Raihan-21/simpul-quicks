@@ -14,16 +14,9 @@ export async function GET(
 ) {
   try {
     const res = await sequelize.query(
-      "SELECT chat_sessions.*, json_agg(json_build_object('name', users.name)) as chat_members   FROM chat_sessions JOIN chat_members ON chat_sessions.id = chat_members.id_chat_session JOIN users ON chat_members.id_user = users.id WHERE users.id = 3 GROUP_BY chat_sessions.id"
+      "SELECT chat_sessions.*,  json_agg(json_build_object('id', users.id, 'name', users.name)) as members  FROM chat_sessions JOIN chat_members ON chat_sessions.id = chat_members.id_chat_session JOIN users ON chat_members.id_user = users.id where users.id = :userId GROUP BY chat_sessions.id",
+      { replacements: { userId: params.id } }
     );
-    // const res = await ChatSession.findAll({
-    //   include: [
-    //     {
-    //       model: User,
-    //       as: "user",
-    //     },
-    //   ],
-    // });
     return Response.json({ data: res });
   } catch (error) {
     console.log(error);

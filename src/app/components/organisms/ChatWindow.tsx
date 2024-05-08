@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
@@ -8,8 +8,10 @@ import { Input } from "../ui/input";
  */
 import ChatItem from "../molecules/ChatItem";
 import ChatDetail from "./ChatDetail";
+import axiosInstance from "@/app/axios";
 
 const ChatWindow = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [chats, setChats] = useState([
     {
@@ -51,6 +53,21 @@ const ChatWindow = () => {
   //     setChatData(chats.find((chat) => chat.id === selectedChat));
   //   };
 
+  useEffect(() => {
+    const fetchChats = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get(`/api/chat//list/4`);
+        setChats(res.data.data[0]);
+      } catch (error: any) {
+        console.log(error.response.data);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchChats();
+  }, []);
+
   return (
     <div>
       {activeTab === "list" ? (
@@ -65,16 +82,25 @@ const ChatWindow = () => {
                 />
                 <i className="icon-search absolute top-3 right-3"></i>
               </div>
-              {chats.length > 0 &&
-                chats.map((chat, i) => (
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => clickDetail(chat.id)}
-                    key={i}
-                  >
-                    <ChatItem data={chat} withBorder={i !== chats.length - 1} />
-                  </div>
-                ))}
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : (
+                <div>
+                  {chats.length > 0 &&
+                    chats.map((chat, i) => (
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => clickDetail(chat.id)}
+                        key={i}
+                      >
+                        <ChatItem
+                          data={chat}
+                          withBorder={i !== chats.length - 1}
+                        />
+                      </div>
+                    ))}
+                </div>
+              )}
             </div>
           </div>
         </ScrollArea>

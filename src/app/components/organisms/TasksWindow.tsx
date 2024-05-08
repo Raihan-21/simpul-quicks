@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 /**
  * Types
@@ -39,6 +39,8 @@ const TasksWindow = () => {
   const [taskList, setTaskList] = useState<Task[]>([]);
   const [filteredTask, setFilteredTask] = useState<Task[]>(taskList);
   const [currentFilter, setCurrentFilter] = useState<string>("all");
+
+  const anchor = useRef<HTMLDivElement | null>(null);
 
   const filterTask = (value: string) => {
     setCurrentFilter(value);
@@ -81,15 +83,18 @@ const TasksWindow = () => {
         dueDate: null,
         createdAt: new Date(),
       };
-
-      // await setTaskList((prevState) => [...prevState, newTask]);
       setFilteredTask((prevState) => [...prevState, newTask]);
-      // fetchTask();
+      setTimeout(() => {
+        anchor.current?.scrollIntoView({ behavior: "smooth" });
+      }, 200);
     } catch (error) {}
   };
 
   const onTaskDelete = (id: number) => {
-    setTaskList(taskList.filter((task) => task.id !== id));
+    setFilteredTask(filteredTask.filter((task) => task.id !== id));
+    fetchTask();
+  };
+  const onTaskCreate = () => {
     fetchTask();
   };
   const onTaskCheck = (id: number, value: boolean) => {
@@ -157,6 +162,7 @@ const TasksWindow = () => {
           </Select>
           <Button
             className="bg-primary hover:bg-primary/75"
+            disabled={isLoading}
             onClick={addNewTask}
           >
             New Task
@@ -173,10 +179,12 @@ const TasksWindow = () => {
                     data={task}
                     key={i}
                     onDelete={onTaskDelete}
+                    onCreate={onTaskCreate}
                     onCheck={onTaskCheck}
                     onChangeType={onTaskTypeChange}
                   />
                 ))}
+              <div ref={anchor}></div>
             </>
           )}
         </div>

@@ -25,7 +25,7 @@ export async function PUT(
         description,
         type,
         completed,
-        dueDate: new Date(),
+        dueDate,
       },
       { where: { id: params.id } }
     );

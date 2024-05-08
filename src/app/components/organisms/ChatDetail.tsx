@@ -17,6 +17,7 @@ const ChatDetail = ({
   id: number | undefined;
   onClickBack: () => void;
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [chatData, setChatData] = useState<any>({
     id: 1,
     title: "Fastvisa",
@@ -44,6 +45,13 @@ const ChatDetail = ({
 
   const chatArea = useRef<HTMLDivElement | null>(null);
 
+  const fetchMesasge = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
+
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage("");
@@ -61,6 +69,14 @@ const ChatDetail = ({
   useEffect(() => {
     chatArea.current?.scrollIntoView({ behavior: "smooth" });
   }, [messageData]);
+
+  useEffect(() => {
+    chatArea.current?.scrollIntoView({ behavior: "smooth" });
+  }, [isLoading]);
+
+  useEffect(() => {
+    fetchMesasge();
+  }, []);
 
   return (
     <div className="relative h-full">
@@ -83,16 +99,20 @@ const ChatDetail = ({
         </div>
       </div>
       <ScrollArea className="chat-area flex-grow pt-5 h-[calc(100%-173px)]  px-[32px] pt-[24px]">
-        <div className="space-y-5">
-          {messageData.length > 0 &&
-            messageData.map((data, i) => (
-              <ChatBubble
-                data={data}
-                isSender={data.createdBy === "you"}
-                key={i}
-              />
-            ))}
-        </div>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <div className="space-y-5">
+            {messageData.length > 0 &&
+              messageData.map((data, i) => (
+                <ChatBubble
+                  data={data}
+                  isSender={data.createdBy === "you"}
+                  key={i}
+                />
+              ))}
+          </div>
+        )}
         <div ref={chatArea} className="h-0"></div>
       </ScrollArea>
       <div className="absolute bottom-0 w-full px-[32px] py-[24px]">

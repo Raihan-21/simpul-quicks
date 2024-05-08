@@ -10,16 +10,24 @@ import { SelectRangeEventHandler } from "react-day-picker";
 
 const Datepicker = ({ value, onChange }: { value: Date; onChange: any }) => {
   const [date, setDate] = useState<Date>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
-        <Button variant={"outline"}>
+        <Button type="button" variant={"outline"}>
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? moment(date).format("DD/MM/YYYY") : "Pick a date"}
+          {value ? moment(value).format("DD/MM/YYYY") : "Set date"}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
-        <Calendar selected={date} onSelect={setDate} />
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={(date: Date | undefined) => {
+            onChange(date);
+            setIsOpen(false);
+          }}
+        />
       </PopoverContent>
     </Popover>
   );

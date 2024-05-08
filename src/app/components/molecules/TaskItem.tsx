@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Calendar from "react-calendar";
+// import Calendar from "react-calendar";
 
 /**
  * Types
@@ -32,15 +32,18 @@ import axiosInstance from "@/app/axios";
  */
 
 import Datepicker from "../organisms/Datepicker";
+import { Calendar } from "../ui/calendar";
 
 const TaskItem = ({
   data,
   onDelete,
+  onCreate,
   onCheck,
   onChangeType,
 }: {
   data: Task;
   onDelete: (id: number) => void;
+  onCreate: () => void;
   onCheck: (id: number, completed: boolean) => void;
   onChangeType: (id: number, type: string) => void;
 }) => {
@@ -58,9 +61,6 @@ const TaskItem = ({
     dueDate: "",
   });
 
-  const onDueDateChange = (value: any) => {
-    setDueDate(value);
-  };
   const checkTask = async () => {
     setTaskData((prevState) => ({
       ...prevState,
@@ -76,11 +76,14 @@ const TaskItem = ({
   };
 
   const changeType = async () => {
+    const type = taskData.type === "urgent" ? "personal" : "urgent";
+    setTaskData((prevState) => ({ ...prevState, type }));
+    if (taskData.isNew) return;
     try {
-      const type = taskData.type === "urgent" ? "personal" : "urgent";
       const res = await axiosInstance.put(`/api/task/${taskData.id}/type`, {
         type,
       });
+
       onChangeType(taskData.id, type);
     } catch (error: any) {
       console.log(error.response.data);
@@ -96,19 +99,20 @@ const TaskItem = ({
         title: "Please fill the title field",
       }));
     }
-    // if (!taskData.dueDate) {
-    //   setIsError(true);
-    //   setErrors((prevState) => ({
-    //     ...prevState,
-    //     dueDate: "Please select the due date",
-    //   }));
-    // }
+    if (!taskData.dueDate) {
+      isValid = false;
+      setErrors((prevState) => ({
+        ...prevState,
+        dueDate: "Please select the due date",
+      }));
+    }
     return isValid;
   };
 
   const saveTask = async () => {
     try {
       const isValid = validateField();
+      console.log(isValid);
       if (!isValid) {
         setIsError(true);
         return;
@@ -133,15 +137,31 @@ const TaskItem = ({
     }
   };
 
+  const changeDueDate = async (date: Date) => {
+    setDueDate(date);
+    setTaskData((prevState) => ({ ...prevState, dueDate: date }));
+    if (taskData.isNew) return;
+    try {
+      const res = await axiosInstance.put(`/api/task/${taskData.id}`, {
+        ...taskData,
+        dueDate: date,
+      });
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  };
+
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
       if (!taskData.isNew) {
         await updateTask();
+
         return;
       }
       await saveTask();
+      onCreate();
     } catch (error) {
     } finally {
       setIsSubmitting(false);
@@ -149,6 +169,10 @@ const TaskItem = ({
     }
   };
   const deleteTask = async () => {
+    if (taskData.isNew) {
+      onDelete(taskData.id);
+      return;
+    }
     try {
       const res = await axiosInstance.delete(`/api/task/delete/${taskData.id}`);
       onDelete(taskData.id);
@@ -179,7 +203,7 @@ const TaskItem = ({
               ) : (
                 <>
                   <Input
-                    className="mb-3"
+                    placeholder="Type task title"
                     value={taskData.title}
                     onChange={(e) =>
                       setTaskData((prevState) => ({
@@ -222,13 +246,18 @@ const TaskItem = ({
               </DropdownMenu>
             </div>
           </div>
-          <div className="flex items-center gap-x-3">
-            <i
-              className={`icon-clock  ${
-                taskData.dueDate ? "text-primary" : ""
-              } `}
-            ></i>
-            <Datepicker value={dueDate} onChange={setDueDate} />
+          <div>
+            <div className="flex items-center gap-x-3">
+              <i
+                className={`icon-clock  ${
+                  taskData.dueDate ? "text-primary" : ""
+                } `}
+              ></i>
+              <Datepicker value={dueDate} onChange={changeDueDate} />
+            </div>
+            {errors.dueDate && (
+              <div className="text-red-500">{errors.dueDate}</div>
+            )}
           </div>
           <div className="flex items-start gap-x-3">
             <i
