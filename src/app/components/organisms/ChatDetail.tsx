@@ -32,10 +32,10 @@ const ChatDetail = ({
 
   const chatArea = useRef<HTMLDivElement | null>(null);
 
-  const fetchMesasge = async () => {
-    setIsLoading(true);
+  const fetchMessage = async ({ reload = true }: { reload?: boolean } = {}) => {
+    if (reload) setIsLoading(true);
     try {
-      const res = await axiosInstance.get(`/api/chat/messages/${id}`);
+      const res = await axiosInstance.get(`/api/chat/${id}/messages`);
       setMessageData(res.data.data);
     } catch (error: any) {
       console.log(error.response.data);
@@ -66,22 +66,13 @@ const ChatDetail = ({
     setMessage("");
 
     try {
-      const res = await axiosInstance.post(`/api/chat/messages/${id}`, {
+      const res = await axiosInstance.post(`/api/chat/${id}/messages`, {
         idUser: 4,
         content: message,
       });
     } catch (error: any) {
       console.log(error.response.data);
     }
-    // setMessageData((prevState) => [
-    //   ...prevState,
-    //   {
-    //     id: Math.floor(Math.random() * 100),
-    //     content: message,
-    //     createdBy: "you",
-    //     createdAt: new Date(),
-    //   },
-    // ]);
   };
 
   useEffect(() => {
@@ -93,7 +84,7 @@ const ChatDetail = ({
   }, [isLoading]);
 
   useEffect(() => {
-    fetchMesasge();
+    fetchMessage();
   }, []);
 
   return (
@@ -127,6 +118,12 @@ const ChatDetail = ({
                   data={data}
                   //Using name as unique id because there is no authentication
                   isSender={data.user.name === "You"}
+                  onDelete={(id) => {
+                    setMessageData(
+                      messageData.filter((message) => message.id !== id)
+                    );
+                    fetchMessage({ reload: false });
+                  }}
                   key={i}
                 />
               ))}

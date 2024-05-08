@@ -112,7 +112,6 @@ const TaskItem = ({
   const saveTask = async () => {
     try {
       const isValid = validateField();
-      console.log(isValid);
       if (!isValid) {
         setIsError(true);
         return;

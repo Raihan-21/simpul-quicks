@@ -48,12 +48,6 @@ const TasksWindow = () => {
 
   const fetchTask = async () => {
     setIsLoading(true);
-    // console.log(taskList);
-    // if (currentFilter === "all") {
-    //   setFilteredTask(taskList);
-    //   return;
-    // }
-    // setFilteredTask(taskList.filter((task) => task.type === currentFilter));
 
     try {
       const res = await axiosInstance.get("/api/task");
