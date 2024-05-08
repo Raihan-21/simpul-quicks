@@ -23,7 +23,7 @@ const ChatItem = ({ data, withBorder }: { data: any; withBorder: boolean }) => {
             {moment(data.created_at).format("DD/MM/YYYY hh:mm")}
           </div>
         </div>
-        {/* <div className="text-sm">{data.lastMessage.content}</div> */}
+        <div className="text-sm">{data.lastMessage.content}</div>
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ const ChatWindow = () => {
       setIsLoading(true);
       try {
         const res = await axiosInstance.get(`/api/chat//list/4`);
-        setChats(res.data.data[0]);
+        setChats(res.data.data);
       } catch (error: any) {
         console.log(error.response.data);
       } finally {
@@ -107,7 +107,7 @@ const ChatWindow = () => {
       ) : (
         <div className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[500px] right-0">
           <div className="  h-full max-h-full relative">
-            <ChatDetail id={selectedChat} onClickBack={back} />
+            <ChatDetail id={selectedChat!} onClickBack={back} />
           </div>
         </div>
       )}

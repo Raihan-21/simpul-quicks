@@ -21,6 +21,8 @@ interface Task {
 interface User {
   id: number;
   name: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface ChatSession {
@@ -37,9 +39,12 @@ interface ChatMember {
 
 interface ChatMessage {
   id: number;
-  idUser: number;
+  id_user: number;
+  user: User;
+  id_chat_session: number;
   content: string;
-  idMessage?: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export type { Quick, Task, User, ChatSession, ChatMember, ChatMessage };

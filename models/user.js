@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      console.log(models);
       this.belongsToMany(models.ChatSession, {
         through: models.ChatMember,
         as: "ChatSession",
         foreignKey: "id_chat_session",
         otherKey: "id_user",
       });
+      this.hasMany(models.Message, { foreignKey: "id_user" });
     }
   }
   User.init(

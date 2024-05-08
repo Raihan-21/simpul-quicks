@@ -9,12 +9,14 @@ import { Button } from "../ui/button";
  */
 
 import ChatBubble from "../molecules/ChatBubble";
+import axiosInstance from "@/app/axios";
+import { ChatMessage } from "@/app/types";
 
 const ChatDetail = ({
   id,
   onClickBack,
 }: {
-  id: number | undefined;
+  id: number;
   onClickBack: () => void;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -24,46 +26,62 @@ const ChatDetail = ({
     participants: 3,
   });
 
-  const [messageData, setMessageData] = useState([
-    {
-      id: 1,
-      content:
-        "Hello Obaidullah, I will be your case advisor for case #029290. I have assigned some homework for you to fill. Please keep up with the due dates. Should you have any questions, you can message me anytime. Thanks.",
-      createdBy: "Mary Hilda",
-      createdAt: new Date(),
-    },
-    {
-      id: 2,
-      content:
-        "Please contact Mary for questions regarding the case bcs she will be managing your forms from now on! Thanks Mary.",
-      createdBy: "you",
-      createdAt: new Date(),
-    },
-  ]);
+  const [messageData, setMessageData] = useState<ChatMessage[]>([]);
 
   const [message, setMessage] = useState<string>("");
 
   const chatArea = useRef<HTMLDivElement | null>(null);
 
-  const fetchMesasge = () => {
+  const fetchMesasge = async () => {
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await axiosInstance.get(`/api/chat/messages/${id}`);
+      setMessageData(res.data.data);
+    } catch (error: any) {
+      console.log(error.response.data);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage("");
     setMessageData((prevState) => [
       ...prevState,
       {
-        id: Math.floor(Math.random() * 100),
+        id: prevState.length > 0 ? prevState[messageData.length - 1].id + 1 : 1,
+        id_user: 4,
+        id_chat_session: id,
+        user: {
+          id: 4,
+          name: "You",
+          created_at: new Date("2024-05-06T07:50:46.97+00:00"),
+          updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
+        },
         content: message,
-        createdBy: "you",
-        createdAt: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
       },
     ]);
+    setMessage("");
+
+    try {
+      const res = await axiosInstance.post(`/api/chat/messages/${id}`, {
+        idUser: 4,
+        content: message,
+      });
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+    // setMessageData((prevState) => [
+    //   ...prevState,
+    //   {
+    //     id: Math.floor(Math.random() * 100),
+    //     content: message,
+    //     createdBy: "you",
+    //     createdAt: new Date(),
+    //   },
+    // ]);
   };
 
   useEffect(() => {
@@ -104,10 +122,11 @@ const ChatDetail = ({
         ) : (
           <div className="space-y-5">
             {messageData.length > 0 &&
-              messageData.map((data, i) => (
+              messageData.map((data: any, i: number) => (
                 <ChatBubble
                   data={data}
-                  isSender={data.createdBy === "you"}
+                  //Using name as unique id because there is no authentication
+                  isSender={data.user.name === "You"}
                   key={i}
                 />
               ))}

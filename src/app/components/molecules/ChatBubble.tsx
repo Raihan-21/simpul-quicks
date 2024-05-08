@@ -7,7 +7,7 @@ const ChatBubble = ({ data, isSender }: { data: any; isSender: boolean }) => {
       {isSender ? (
         <div className="flex flex-col items-end ">
           <div className="capitalize text-second-purple font-bold">
-            {data.createdBy}
+            {data.user.name}
           </div>
           <div className="flex items-start  ">
             <button>
@@ -16,7 +16,7 @@ const ChatBubble = ({ data, isSender }: { data: any; isSender: boolean }) => {
             <div className="rounded-sm p-[10px] bg-light-purple max-w-[400px]">
               <div className="mb-2">{data.content}</div>
               <div className="text-sm">
-                {moment(data.createdAt).format("hh:mm")}
+                {moment(data.created_at).format("hh:mm")}
               </div>
             </div>
           </div>
@@ -24,7 +24,7 @@ const ChatBubble = ({ data, isSender }: { data: any; isSender: boolean }) => {
       ) : (
         <div className="flex flex-col">
           <div className="capitalize text-dark-orange font-bold">
-            {data.createdBy}
+            {data.user.name}
           </div>
           <div className="flex flex-row-reverse justify-end items-start  ">
             <button>
@@ -33,7 +33,7 @@ const ChatBubble = ({ data, isSender }: { data: any; isSender: boolean }) => {
             <div className="rounded-sm p-[10px] bg-light-orange max-w-[400px]">
               <div className="mb-2">{data.content}</div>
               <div className="text-sm">
-                {moment(data.createdAt).format("hh:mm")}
+                {moment(data.created_at).format("hh:mm")}
               </div>
             </div>
           </div>
