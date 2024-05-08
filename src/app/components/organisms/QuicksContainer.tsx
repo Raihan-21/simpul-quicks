@@ -18,8 +18,6 @@ import TasksWindow from "./TasksWindow";
 const QuicksContainer = () => {
   const [currentPopup, setCurrentPopup] = useState<string>("");
 
-  // const [search, setsearch] = useState(second)
-
   const onTaskClick = async () => {
     setCurrentPopup("tasks");
   };
@@ -66,7 +64,6 @@ const QuicksContainer = () => {
 
   return (
     <div className="fixed bottom-5 right-5 max-w-[600px] w-full flex justify-end">
-      {/* Fix tailwind styling not working bug */}
       <div className="hidden text-main-purple text-main-orange bg-main-purple bg-main-orange bg-dark-gray"></div>
 
       <Quicks
@@ -75,24 +72,7 @@ const QuicksContainer = () => {
         onOpen={openQuicks}
         onTabClose={closeTab}
         onClose={closeQuicks}
-      >
-        {/* <FloatingActionButton bgColor="light-gray" onClick={onTaskClick}>
-        <Image
-          src={"/icons/icon-answer-outlined.svg"}
-          width={24}
-          height={24}
-          alt="icon-bolt"
-        />
-      </FloatingActionButton>
-      <FloatingActionButton bgColor="light-gray" onClick={onTaskClick}>
-        <Image
-          src={"/icons/icon-bookmark.svg"}
-          width={24}
-          height={24}
-          alt="icon-bolt"
-        />
-      </FloatingActionButton> */}
-      </Quicks>
+      ></Quicks>
 
       {currentPopup === "tasks" && <TasksWindow />}
       {currentPopup === "chats" && <ChatWindow />}

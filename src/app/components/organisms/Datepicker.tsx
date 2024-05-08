@@ -1,15 +1,13 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
+
+import moment from "moment";
+import { CalendarIcon } from "lucide-react";
 
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { Button } from "../ui/button";
 
-import moment from "moment";
-import { CalendarIcon } from "lucide-react";
-import { SelectRangeEventHandler } from "react-day-picker";
-
 const Datepicker = ({ value, onChange }: { value: Date; onChange: any }) => {
-  const [date, setDate] = useState<Date>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>

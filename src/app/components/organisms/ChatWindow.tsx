@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 
+import axiosInstance from "@/app/axios";
+
+import { ChatSession } from "@/app/types";
+
 import ClipLoader from "react-spinners/ClipLoader";
 
 import { ScrollArea } from "../ui/scroll-area";
@@ -10,8 +14,6 @@ import { Input } from "../ui/input";
  */
 import ChatItem from "../molecules/ChatItem";
 import ChatDetail from "./ChatDetail";
-import axiosInstance from "@/app/axios";
-import { ChatSession } from "@/app/types";
 
 const ChatWindow = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,12 +21,23 @@ const ChatWindow = () => {
   const [chats, setChats] = useState<ChatSession[]>([]);
   const [filteredChats, setFilteredChats] = useState<ChatSession[]>([]);
 
-  const [isDetail, setIsDetail] = useState<boolean>(false);
-  const [selectedChat, setSelectedChat] = useState<number>();
+  const [selectedChat, setSelectedChat] = useState<ChatSession>();
   const [activeTab, setActiveTab] = useState<string>("list");
 
-  const clickDetail = (id: number) => {
-    setSelectedChat(id);
+  const fetchChats = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance.get(`/api/chat//list/4`);
+      setChats(res.data.data);
+      setFilteredChats(res.data.data);
+    } catch (error: any) {
+      console.log(error.response.data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const clickDetail = (chat: ChatSession) => {
+    setSelectedChat(chat);
     setActiveTab("detail");
   };
 
@@ -39,25 +52,10 @@ const ChatWindow = () => {
   };
   const back = () => {
     setActiveTab("list");
+    fetchChats();
   };
 
-  //   const fetchDetail = () => {
-  //     setChatData(chats.find((chat) => chat.id === selectedChat));
-  //   };
-
   useEffect(() => {
-    const fetchChats = async () => {
-      setIsLoading(true);
-      try {
-        const res = await axiosInstance.get(`/api/chat//list/4`);
-        setChats(res.data.data);
-        setFilteredChats(res.data.data);
-      } catch (error: any) {
-        console.log(error.response.data);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchChats();
   }, []);
 
@@ -92,7 +90,7 @@ const ChatWindow = () => {
                     filteredChats.map((chat, i) => (
                       <div
                         className="cursor-pointer"
-                        onClick={() => clickDetail(chat.id)}
+                        onClick={() => clickDetail(chat)}
                         key={i}
                       >
                         <ChatItem
@@ -109,7 +107,7 @@ const ChatWindow = () => {
       ) : (
         <div className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[500px] right-0">
           <div className="  h-full max-h-full relative">
-            <ChatDetail id={selectedChat!} onClickBack={back} />
+            <ChatDetail chatData={selectedChat!} onClickBack={back} />
           </div>
         </div>
       )}

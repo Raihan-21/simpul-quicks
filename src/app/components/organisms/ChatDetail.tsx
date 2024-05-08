@@ -1,5 +1,9 @@
 import React, { RefObject, useEffect, useRef, useState } from "react";
 
+import axiosInstance from "@/app/axios";
+
+import { ChatMessage, ChatSession } from "@/app/types";
+
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -9,22 +13,15 @@ import { Button } from "../ui/button";
  */
 
 import ChatBubble from "../molecules/ChatBubble";
-import axiosInstance from "@/app/axios";
-import { ChatMessage } from "@/app/types";
 
 const ChatDetail = ({
-  id,
+  chatData,
   onClickBack,
 }: {
-  id: number;
+  chatData: ChatSession;
   onClickBack: () => void;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [chatData, setChatData] = useState<any>({
-    id: 1,
-    title: "Fastvisa",
-    participants: 3,
-  });
 
   const [messageData, setMessageData] = useState<ChatMessage[]>([]);
 
@@ -35,7 +32,7 @@ const ChatDetail = ({
   const fetchMessage = async ({ reload = true }: { reload?: boolean } = {}) => {
     if (reload) setIsLoading(true);
     try {
-      const res = await axiosInstance.get(`/api/chat/${id}/messages`);
+      const res = await axiosInstance.get(`/api/chat/${chatData.id}/messages`);
       setMessageData(res.data.data);
     } catch (error: any) {
       console.log(error.response.data);
@@ -51,7 +48,7 @@ const ChatDetail = ({
       {
         id: prevState.length > 0 ? prevState[messageData.length - 1].id + 1 : 1,
         id_user: 4,
-        id_chat_session: id,
+        id_chat_session: chatData.id,
         user: {
           id: 4,
           name: "You",
@@ -66,10 +63,13 @@ const ChatDetail = ({
     setMessage("");
 
     try {
-      const res = await axiosInstance.post(`/api/chat/${id}/messages`, {
-        idUser: 4,
-        content: message,
-      });
+      const res = await axiosInstance.post(
+        `/api/chat/${chatData.id}/messages`,
+        {
+          idUser: 4,
+          content: message,
+        }
+      );
     } catch (error: any) {
       console.log(error.response.data);
     }
@@ -99,8 +99,8 @@ const ChatDetail = ({
             <i className="icon-arrow-left"></i>
           </button>
           <div>
-            <div className="text-primary font-bold">{chatData.title}</div>
-            <div className="text-sm">{chatData.participants} participants</div>
+            <div className="text-primary font-bold">{chatData.name}</div>
+            {chatData.is_group && <div className="text-sm">3 participants</div>}
           </div>
         </div>
         <div>

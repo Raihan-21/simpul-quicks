@@ -1,14 +1,15 @@
 "use client";
 
-import React, { ReactElement, ReactNode, useState } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+
+import { Quick } from "@/app/types";
 
 /**
  * Custom Components
  */
 
 import QuickButton from "../atoms/QuickButton";
-import { Quick } from "@/app/types";
 
 const Quicks = ({
   bgColor = "primary",
@@ -66,11 +67,7 @@ const Quicks = ({
         </QuickButton>
       </motion.div>
 
-      <AnimatePresence
-      // className={`${
-      //   isExpanded ? `opacity-1 ` : "opacity-0"
-      // } flex flex-row-reverse justify-center items-center`}
-      >
+      <AnimatePresence>
         {isExpanded && (
           <motion.div>
             {actions.length > 0 &&
@@ -82,7 +79,6 @@ const Quicks = ({
                     left: calculateQuickGapsAnimation(action.id, action.index),
                   }}
                   exit={{ left: 0 }}
-                  // style={{ left: calculateQuickGaps(action.id, action.index) }}
                   key={action.id}
                 >
                   <QuickButton
@@ -105,7 +101,6 @@ const Quicks = ({
                   </QuickButton>
                 </motion.div>
               ))}
-            {/* {children} */}
           </motion.div>
         )}
       </AnimatePresence>

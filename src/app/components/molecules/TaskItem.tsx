@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-// import Calendar from "react-calendar";
+
+/**
+ * Axios Config
+ */
+
+import axiosInstance from "@/app/axios";
 
 /**
  * Types
@@ -22,17 +27,10 @@ import {
 } from "../ui/dropdown-menu";
 
 /**
- * Axios Config
- */
-
-import axiosInstance from "@/app/axios";
-
-/**
  * Custom Components
  */
 
 import Datepicker from "../organisms/Datepicker";
-import { Calendar } from "../ui/calendar";
 
 const TaskItem = ({
   data,
@@ -50,7 +48,6 @@ const TaskItem = ({
   const [taskData, setTaskData] = useState<Task>(data);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState<boolean>(taskData.completed);
   const [isError, setIsError] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -179,10 +176,6 @@ const TaskItem = ({
       console.log(error.response.data);
     }
   };
-
-  // useEffect(() => {
-  //   updateTaskStatus();
-  // }, [isChecked]);
 
   return (
     <div className="flex gap-x-5 border-b-[1px] border-gray py-[22px] text-dark-gray">

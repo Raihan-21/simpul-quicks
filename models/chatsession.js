@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   ChatSession.init(
     {
       name: DataTypes.STRING,
+      isGroup: DataTypes.BOOLEAN,
     },
     {
       sequelize,

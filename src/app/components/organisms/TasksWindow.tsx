@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 
 /**
+ * Axios Config
+ */
+
+import axiosInstance from "@/app/axios";
+
+/**
  * Types
  */
 
@@ -20,12 +26,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-
-/**
- * Axios Config
- */
-
-import axiosInstance from "@/app/axios";
 
 /**
  * Custom Components

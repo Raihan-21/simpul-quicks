@@ -27,6 +27,7 @@ interface User {
 
 interface ChatSession {
   id: number;
+  is_group: boolean;
   lastMessage: ChatMessage;
   members: any;
   name?: string;

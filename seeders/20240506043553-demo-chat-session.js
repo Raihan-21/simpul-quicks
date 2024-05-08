@@ -14,7 +14,14 @@ module.exports = {
      */
     return await queryInterface.bulkInsert("chat_sessions", [
       {
+        name: "Simpul Tech",
+        is_group: true,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
         name: "FastVisa Support",
+        is_group: false,
         created_at: new Date(),
         updated_at: new Date(),
       },
