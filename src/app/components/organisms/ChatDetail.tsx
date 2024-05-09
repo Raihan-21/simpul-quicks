@@ -64,6 +64,7 @@ const ChatDetail = ({
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!message) return;
     // Create new array of grouped chat if there is no messages today
     if (
       !messageData.length ||

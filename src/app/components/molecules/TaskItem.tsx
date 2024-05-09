@@ -117,9 +117,8 @@ const TaskItem = ({
       setErrors({ title: "", dueDate: "" });
 
       setTaskData((prevState) => ({ ...prevState, isNew: false }));
-
-      const res = await axiosInstance.post("/api/task", taskData);
       setIsEditing(false);
+      return await axiosInstance.post("/api/task", taskData);
     } catch (error: any) {
       console.log(error.response.data);
     }
@@ -156,8 +155,8 @@ const TaskItem = ({
 
         return;
       }
-      await saveTask();
-      onCreate();
+      const res = await saveTask();
+      if (res?.data) onCreate();
     } catch (error) {
     } finally {
       setIsSubmitting(false);
