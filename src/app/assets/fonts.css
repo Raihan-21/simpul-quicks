@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'quicks';
-  src:  url('fonts/quicks.eot?6lga1h');
-  src:  url('fonts/quicks.eot?6lga1h#iefix') format('embedded-opentype'),
-    url('fonts/quicks.ttf?6lga1h') format('truetype'),
-    url('fonts/quicks.woff?6lga1h') format('woff'),
-    url('fonts/quicks.svg?6lga1h#quicks') format('svg');
+  src:  url('fonts/quicks.eot?rtj28p');
+  src:  url('fonts/quicks.eot?rtj28p#iefix') format('embedded-opentype'),
+    url('fonts/quicks.ttf?rtj28p') format('truetype'),
+    url('fonts/quicks.woff?rtj28p') format('woff'),
+    url('fonts/quicks.svg?rtj28p#quicks') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-chevron-up:before {
+  content: "\e901";
+  color: #4f4f4f;
+}
 .icon-copy:before {
   content: "\e900";
 }

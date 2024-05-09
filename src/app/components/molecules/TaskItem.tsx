@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 /**
  * Axios Config
@@ -229,7 +230,9 @@ const TaskItem = ({
             ).format("DD/MM/YYYY")}
           </div>
           <CollapsibleTrigger>
-            <i className="icon-arrow-down"></i>
+            <motion.div animate={{ rotateZ: isOpen ? 0 : 180 }}>
+              <i className="icon-chevron-up text-xs"></i>
+            </motion.div>
           </CollapsibleTrigger>
           <DropdownMenu>
             <DropdownMenuTrigger>
