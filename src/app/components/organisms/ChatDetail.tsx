@@ -42,13 +42,13 @@ const ChatDetail = ({
         _.chain(
           res.data.data.map((data: ChatList) => ({
             ...data,
-            created_at: moment(data.created_at).format("DD/MM/YYYY"),
+            created_date: moment(data.created_at).format("DD/MM/YYYY"),
           }))
         )
 
           // Group messages by created date
 
-          .groupBy("created_at")
+          .groupBy("created_date")
           .map((value, key) => ({
             messages: value,
             created_at: moment(key).format("DD/MM/YYYY"),
