@@ -60,9 +60,12 @@ const ChatWindow = () => {
   }, []);
 
   return (
-    <div>
+    <div
+      className=" min-w-[300px] w-full h-[500px] !absolute -top-[515px] right-0 px-5
+"
+    >
       {activeTab === "list" ? (
-        <ScrollArea className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[515px] right-0">
+        <ScrollArea className="bg-white rounded-md h-full">
           <div className=" px-[32px] py-[24px]">
             <div>
               <div className="relative">
@@ -105,7 +108,7 @@ const ChatWindow = () => {
           </div>
         </ScrollArea>
       ) : (
-        <div className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[500px] right-0">
+        <div className="bg-white rounded-md h-full">
           <div className="  h-full max-h-full relative">
             <ChatDetail chatData={selectedChat!} onClickBack={back} />
           </div>

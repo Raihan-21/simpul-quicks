@@ -131,51 +131,53 @@ const TasksWindow = () => {
   }, [currentFilter]);
 
   return (
-    <ScrollArea className="min-w-[300px] w-full h-[500px] bg-white rounded-md !absolute -top-[515px] right-0">
-      <div className=" px-[32px] py-[24px]">
-        <div className="flex justify-between gap-x-5">
-          <Select onValueChange={filterTask}>
-            <SelectTrigger className="max-w-[100px]">
-              <SelectValue placeholder="My Tasks" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">My Tasks</SelectItem>
-                <SelectItem value="personal">Personal Errands</SelectItem>
-                <SelectItem value="urgent">Urgent To-Do</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Button
-            className="bg-primary hover:bg-primary/75"
-            disabled={isLoading}
-            onClick={addNewTask}
-          >
-            New Task
-          </Button>
+    <div className="rounded-md min-w-[300px] w-full h-[500px]  !absolute -top-[515px] right-0 px-5">
+      <ScrollArea className="bg-white rounded-md h-full">
+        <div className=" px-[32px] py-[24px]">
+          <div className="flex justify-between gap-x-5">
+            <Select onValueChange={filterTask}>
+              <SelectTrigger className="max-w-[100px]">
+                <SelectValue placeholder="My Tasks" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="all">My Tasks</SelectItem>
+                  <SelectItem value="personal">Personal Errands</SelectItem>
+                  <SelectItem value="urgent">Urgent To-Do</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Button
+              className="bg-primary hover:bg-primary/75"
+              disabled={isLoading}
+              onClick={addNewTask}
+            >
+              New Task
+            </Button>
+          </div>
+          <div className="mt-[22px]">
+            {isLoading ? (
+              <div className="flex justify-center">Loading</div>
+            ) : (
+              <>
+                {filteredTask.length > 0 &&
+                  filteredTask.map((task, i) => (
+                    <TaskItem
+                      data={task}
+                      key={i}
+                      onDelete={onTaskDelete}
+                      onCreate={onTaskCreate}
+                      onCheck={onTaskCheck}
+                      onChangeType={onTaskTypeChange}
+                    />
+                  ))}
+                <div ref={anchor}></div>
+              </>
+            )}
+          </div>
         </div>
-        <div className="mt-[22px]">
-          {isLoading ? (
-            <div className="flex justify-center">Loading</div>
-          ) : (
-            <>
-              {filteredTask.length > 0 &&
-                filteredTask.map((task, i) => (
-                  <TaskItem
-                    data={task}
-                    key={i}
-                    onDelete={onTaskDelete}
-                    onCreate={onTaskCreate}
-                    onCheck={onTaskCheck}
-                    onChangeType={onTaskTypeChange}
-                  />
-                ))}
-              <div ref={anchor}></div>
-            </>
-          )}
-        </div>
-      </div>
-    </ScrollArea>
+      </ScrollArea>
+    </div>
   );
 };
 

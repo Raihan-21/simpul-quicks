@@ -1,5 +1,6 @@
 import React, { RefObject, useEffect, useRef, useState } from "react";
 import * as _ from "lodash";
+import ClipLoader from "react-spinners/ClipLoader";
 
 import axiosInstance from "@/app/axios";
 
@@ -189,6 +190,8 @@ const ChatDetail = ({
           </button>
           <div>
             <div className="text-primary font-bold">{chatData.name}</div>
+
+            {/* Static data placeholder because too complicated to build the db relation */}
             {chatData.is_group && <div className="text-sm">3 participants</div>}
           </div>
         </div>
@@ -198,7 +201,14 @@ const ChatDetail = ({
       </div>
       <ScrollArea className="chat-area flex-grow pt-5 h-[calc(100%-173px)]  px-[32px] pt-[24px]">
         {isLoading ? (
-          <div>Loading...</div>
+          <div
+            className="flex flex-col items-center justify-center gap-y-3 mt-[22px]"
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          >
+            <ClipLoader color="#C4C4C4" size={50} />
+            Loading messages...
+          </div>
         ) : (
           <div className="space-y-5">
             {messageData.length > 0 &&
