@@ -25,6 +25,7 @@ const ChatDetail = ({
   onClickBack: () => void;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // Using any data type because there is issue with lodash functions
   const [messageData, setMessageData] = useState<any>({ messages: [] });
@@ -60,98 +61,103 @@ const ChatDetail = ({
       setIsLoading(false);
     }
   };
-
-  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!message) return;
-    // Create new array of grouped chat if there is no messages today
-    if (
-      !messageData.length ||
-      !(
-        moment(messageData[messageData.length - 1].created_at).format(
-          "DD/MM/YYYY"
-        ) == moment(new Date()).format("DD/MM/YYYY")
-      )
-    ) {
-      setMessageData((prevState: ChatList[]) => [
-        ...prevState,
-        {
-          created_at: new Date(),
-          messages: [
-            {
-              id:
-                prevState.length > 0
-                  ? prevState[prevState.length - 1].messages[
-                      prevState[prevState.length - 1].messages.length - 1
-                    ].id + 1
-                  : 1,
-              id_user: 4,
-              id_chat_session: chatData.id,
-              user: {
-                id: 4,
-                name: "You",
-                created_at: new Date("2024-05-06T07:50:46.97+00:00"),
-                updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
-              },
-              content: message,
-              created_at: new Date(),
-              updated_at: new Date(),
-            },
-          ],
-        },
-      ]);
+    if (!isEditing) {
+      await sendMessage();
+      return;
     }
-    // Push message to latest grouped message
-    else
-      setMessageData(
-        messageData.map((messages: ChatList) => {
-          if (
-            moment(new Date(messages.created_at)).format("DD/MM/YYYY") ==
-            moment(new Date()).format("DD/MM/YYYY")
-          ) {
-            return {
-              ...messages,
-              messages: [
-                ...messages.messages,
+    saveMessage();
+  };
 
-                {
-                  id:
-                    messages.messages.length > 0
-                      ? messages.messages[messages.messages.length - 1].id + 1
-                      : 1,
-                  id_user: 4,
-                  id_chat_session: chatData.id,
-                  user: {
-                    id: 4,
-                    name: "You",
-                    created_at: new Date("2024-05-06T07:50:46.97+00:00"),
-                    updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
-                  },
-                  content: message,
-                  created_at: new Date(),
-                  updated_at: new Date(),
-                },
-              ],
-            };
-          }
-          return { ...messages };
-        })
-      );
-    setMessage("");
-
+  const sendMessage = async () => {
+    if (!message) return;
     try {
+      setMessage("");
       const res = await axiosInstance.post(
         `/api/chat/${chatData.id}/messages`,
         {
           idUser: 4,
           content: message,
         }
-      );
+      ); // Create new array of grouped chat if there is no messages today
+      if (
+        !messageData.length ||
+        !(
+          moment(messageData[messageData.length - 1].created_at).format(
+            "DD/MM/YYYY"
+          ) == moment(new Date()).format("DD/MM/YYYY")
+        )
+      ) {
+        setMessageData((prevState: ChatList[]) => [
+          ...prevState,
+          {
+            created_at: new Date(),
+            messages: [
+              {
+                id: res.data.data.id,
+                // prevState.length > 0
+                //   ? prevState[prevState.length - 1].messages[
+                //       prevState[prevState.length - 1].messages.length - 1
+                //     ].id + 1
+                //   : 1,
+                id_user: 4,
+                id_chat_session: chatData.id,
+                user: {
+                  id: 4,
+                  name: "You",
+                  created_at: new Date("2024-05-06T07:50:46.97+00:00"),
+                  updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
+                },
+                content: message,
+                created_at: new Date(),
+                updated_at: new Date(),
+              },
+            ],
+          },
+        ]);
+      }
+      // Push message to latest grouped message
+      else
+        setMessageData(
+          messageData.map((messages: ChatList) => {
+            if (
+              moment(new Date(messages.created_at)).format("DD/MM/YYYY") ==
+              moment(new Date()).format("DD/MM/YYYY")
+            ) {
+              return {
+                ...messages,
+                messages: [
+                  ...messages.messages,
+
+                  {
+                    id: res.data.data.id,
+                    // messages.messages.length > 0
+                    //   ? messages.messages[messages.messages.length - 1].id + 1
+                    //   : 1,
+                    id_user: 4,
+                    id_chat_session: chatData.id,
+                    user: {
+                      id: 4,
+                      name: "You",
+                      created_at: new Date("2024-05-06T07:50:46.97+00:00"),
+                      updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
+                    },
+                    content: message,
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                  },
+                ],
+              };
+            }
+            return { ...messages };
+          })
+        );
     } catch (error: any) {
       console.log(error.response.data);
     }
   };
+  const saveMessage = async () => {};
 
   const formatChatDate = (date: Date) => {
     if (
@@ -223,6 +229,10 @@ const ChatDetail = ({
                         data={data}
                         //Using name as unique id because there is no authentication
                         isSender={data.user.id === 4}
+                        onEdit={(id, date, content) => {
+                          // setIsEditing(true);
+                          // setMessage(content);
+                        }}
                         onDelete={(id, date) => {
                           setMessageData(
                             messageData.map((messages: ChatList) => {
@@ -245,20 +255,33 @@ const ChatDetail = ({
         <div ref={chatArea} className="h-0"></div>
       </ScrollArea>
       <div className="absolute bottom-0 w-full px-[32px] py-[24px]">
-        <form className="flex justify-between gap-x-5 " onSubmit={sendMessage}>
+        <form
+          className="flex justify-between gap-x-5 "
+          onSubmit={submitMessage}
+        >
           <Input
             placeholder="Type a new message"
             className="border-[1px] border-black"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <Button
-            disabled={isLoading}
-            type="submit"
-            className="bg-primary hover:bg-primary hover:bg-opacity-75"
-          >
-            Send
-          </Button>
+          {!isEditing ? (
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="bg-primary hover:bg-primary hover:bg-opacity-75"
+            >
+              Send
+            </Button>
+          ) : (
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="bg-primary hover:bg-primary hover:bg-opacity-75"
+            >
+              Save
+            </Button>
+          )}
         </form>
       </div>
     </div>

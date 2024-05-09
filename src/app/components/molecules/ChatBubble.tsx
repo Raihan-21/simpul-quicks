@@ -3,6 +3,8 @@ import React from "react";
 
 import axiosInstance from "@/app/axios";
 
+import { ChatMessage } from "@/app/types";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,12 +16,17 @@ import {
 const ChatBubble = ({
   data,
   isSender,
+  onEdit,
   onDelete,
 }: {
-  data: any;
+  data: ChatMessage;
   isSender: boolean;
+  onEdit: (id: number, date: Date, content: string) => void;
   onDelete: (id: number, date: Date) => void;
 }) => {
+  const editMessage = (id: number, date: Date, content: string) => {
+    onEdit(id, date, content);
+  };
   const deleteMessage = async () => {
     try {
       const res = await axiosInstance.delete(
@@ -44,7 +51,12 @@ const ChatBubble = ({
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() =>
+                      editMessage(data.id, data.created_at, data.content)
+                    }
+                  >
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem
