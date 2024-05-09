@@ -25,6 +25,12 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        id_user: 4,
+        id_chat_session: 2,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 

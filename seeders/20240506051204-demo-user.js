@@ -14,11 +14,13 @@ module.exports = {
      */
     return await queryInterface.bulkInsert("users", [
       {
+        id: 3,
         name: "FastVisa Support",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
+        id: 4,
         name: "You",
         created_at: new Date(),
         updated_at: new Date(),

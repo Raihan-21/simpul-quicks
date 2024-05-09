@@ -40,7 +40,12 @@ const ChatItem = ({
           </div>
         </div>
         {data.lastMessage && (
-          <div className="text-sm">{data.lastMessage.content}</div>
+          <div>
+            <div className="text-sm font-bold">
+              {data.lastMessage.user.name}:
+            </div>
+            <div className="text-sm">{data.lastMessage.content}</div>
+          </div>
         )}
       </div>
     </div>

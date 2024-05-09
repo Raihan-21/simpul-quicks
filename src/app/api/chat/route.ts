@@ -5,7 +5,7 @@ const ChatSession = chatSessionModel(sequelize, Sequelize.DataTypes);
 
 export async function GET(req: Request) {
   try {
-    const res = await ChatSession.findAll();
+    const res = await ChatSession.findAll({ order: ["created_at", "DESC"] });
     return Response.json({ data: res });
   } catch (error) {
     return Response.json({ error }, { status: 500 });

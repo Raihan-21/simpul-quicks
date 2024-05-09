@@ -57,7 +57,7 @@ const ChatBubble = ({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="rounded-sm p-[10px] bg-light-purple max-w-[400px]">
+            <div className="rounded-[5px] p-[10px] bg-light-purple max-w-[400px]">
               <div className="mb-2">{data.content}</div>
               <div className="text-sm">
                 {moment(data.created_at).format("hh:mm")}

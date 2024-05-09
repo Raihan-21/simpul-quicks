@@ -25,6 +25,7 @@ const ChatDetail = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Using any data type because there is issue with lodash functions
   const [messageData, setMessageData] = useState<any>({ messages: [] });
 
   const [message, setMessage] = useState<string>("");
@@ -35,10 +36,9 @@ const ChatDetail = ({
     if (reload) setIsLoading(true);
     try {
       const res = await axiosInstance.get(`/api/chat/${chatData.id}/messages`);
-      // setMessageData(res.data.data);
       setMessageData(
         _.chain(
-          res.data.data.map((data: any) => ({
+          res.data.data.map((data: ChatList) => ({
             ...data,
             created_at: moment(data.created_at).format("DD/MM/YYYY"),
           }))
@@ -50,7 +50,6 @@ const ChatDetail = ({
           }))
           .value()
       );
-      // const groupedMessage = res.data
     } catch (error: any) {
       console.log(error.response);
     } finally {
@@ -60,15 +59,15 @@ const ChatDetail = ({
 
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (
+      !messageData.length ||
       !(
         moment(messageData[messageData.length - 1].created_at).format(
           "DD/MM/YYYY"
         ) == moment(new Date()).format("DD/MM/YYYY")
       )
     ) {
-      setMessageData((prevState: any) => [
+      setMessageData((prevState: ChatList[]) => [
         ...prevState,
         {
           created_at: new Date(),
@@ -97,7 +96,7 @@ const ChatDetail = ({
       ]);
     } else
       setMessageData(
-        messageData.map((messages: any) => {
+        messageData.map((messages: ChatList) => {
           if (
             moment(new Date(messages.created_at)).format("DD/MM/YYYY") ==
             moment(new Date()).format("DD/MM/YYYY")
@@ -130,26 +129,6 @@ const ChatDetail = ({
           return { ...messages };
         })
       );
-    // setMessageData(messageData.map((message: any) => {
-    //   if(message.created_at)
-    // }))
-    // setMessageData((prevState: any) => [
-    //   ...prevState,
-    //   {
-    //     id: prevState.length > 0 ? prevState[messageData.length - 1].id + 1 : 1,
-    //     id_user: 4,
-    //     id_chat_session: chatData.id,
-    //     user: {
-    //       id: 4,
-    //       name: "You",
-    //       created_at: new Date("2024-05-06T07:50:46.97+00:00"),
-    //       updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
-    //     },
-    //     content: message,
-    //     created_at: new Date(),
-    //     updated_at: new Date(),
-    //   },
-    // ]);
     setMessage("");
 
     try {
@@ -163,6 +142,21 @@ const ChatDetail = ({
     } catch (error: any) {
       console.log(error.response.data);
     }
+  };
+
+  const formatChatDate = (date: Date) => {
+    console.log(
+      moment(date).format("DD/MM/YYYY"),
+      moment(new Date()).format("DD/MM/YYYY")
+    );
+    if (
+      moment(date).format("DD//MM/YYYY") ==
+      moment(new Date()).format("DD/MM/YYYY")
+    ) {
+      console.log("today");
+      return `Today ${moment(date).format("LL")}`;
+    }
+    return moment(date).format("dddd LL");
   };
 
   useEffect(() => {
@@ -208,18 +202,24 @@ const ChatDetail = ({
         ) : (
           <div className="space-y-5">
             {messageData.length > 0 &&
-              messageData.map((messages: any, i: number) => (
+              messageData.map((messages: ChatList, i: number) => (
                 <>
-                  <div>{moment(messages.created_at).format("DD/MM/YYYY")}</div>
+                  <div className="relative text-dark-gray mt-3">
+                    <div className="border-b-[1px] border-dark-gray"></div>
+
+                    <div className="font-bold z-[1] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white px-5">
+                      {formatChatDate(messages.created_at)}
+                    </div>
+                  </div>
                   {messages.messages.length > 0 &&
-                    messages.messages.map((data: any, i: number) => (
+                    messages.messages.map((data: ChatMessage, i: number) => (
                       <ChatBubble
                         data={data}
                         //Using name as unique id because there is no authentication
-                        isSender={data.user.name === "You"}
+                        isSender={data.user.id === 4}
                         onDelete={(id, date) => {
                           setMessageData(
-                            messageData.map((messages: any) => {
+                            messageData.map((messages: ChatList) => {
                               if (messages.created_at === date)
                                 console.log(messages.created_at, date);
                               return {
