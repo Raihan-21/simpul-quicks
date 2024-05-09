@@ -18,14 +18,14 @@ const ChatBubble = ({
 }: {
   data: any;
   isSender: boolean;
-  onDelete: (id: number) => void;
+  onDelete: (id: number, date: Date) => void;
 }) => {
   const deleteMessage = async () => {
     try {
       const res = await axiosInstance.delete(
         `/api/chat/messages/${data.id}/delete`
       );
-      onDelete(data.id);
+      onDelete(data.id, data.created_at);
     } catch (error: any) {
       console.log(error.response.data);
     }

@@ -51,4 +51,17 @@ interface ChatMessage {
   updated_at: Date;
 }
 
-export type { Quick, Task, User, ChatSession, ChatMember, ChatMessage };
+interface ChatList {
+  created_at: Date;
+  messages: ChatMessage[];
+}
+
+export type {
+  Quick,
+  Task,
+  User,
+  ChatSession,
+  ChatMember,
+  ChatMessage,
+  ChatList,
+};

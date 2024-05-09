@@ -34,7 +34,9 @@ const ChatItem = ({
         <div className="flex items-center gap-x-5">
           <div className="text-primary font-bold">{data.name}</div>
           <div className="text-sm">
-            {moment(data.lastMessage.created_at).format("DD/MM/YYYY hh:mm")}
+            {moment(
+              data.lastMessage ? data.lastMessage.created_at : data.created_at
+            ).format("DD/MM/YYYY hh:mm")}
           </div>
         </div>
         {data.lastMessage && (

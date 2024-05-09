@@ -119,14 +119,6 @@ const TasksWindow = () => {
         return { ...task };
       })
     );
-    // setFilteredTask(
-    //   filteredTask.map((task) => {
-    //     if (task.id === id) {
-    //       return { ...task, type };
-    //     }
-    //     return { ...task };
-    //   })
-    // );
     fetchTask();
   };
 
