@@ -183,6 +183,10 @@ const TaskItem = ({
     }
   };
 
+  useEffect(() => {
+    if (data.isNew) setIsOpen(true);
+  }, []);
+
   return (
     <Collapsible
       open={isOpen}
