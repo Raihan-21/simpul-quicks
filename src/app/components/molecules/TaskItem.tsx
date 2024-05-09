@@ -31,6 +31,11 @@ import {
  */
 
 import Datepicker from "../organisms/Datepicker";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
 
 const TaskItem = ({
   data,
@@ -47,6 +52,7 @@ const TaskItem = ({
 }) => {
   const [taskData, setTaskData] = useState<Task>(data);
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -177,11 +183,16 @@ const TaskItem = ({
   };
 
   return (
-    <div className="flex gap-x-5 border-b-[1px] border-gray py-[22px] text-dark-gray">
-      <Checkbox checked={taskData.completed} onClick={checkTask} />
-      <div className="flex-grow ">
-        <form onSubmit={submitForm} className="space-y-3">
-          <div className="flex justify-between items-start">
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="border-b-[1px] border-gray py-[22px] text-dark-gray"
+    >
+      <div className="flex justify-between gap-x-5 w-full">
+        <div className="flex items-start gap-x-5">
+          <Checkbox checked={taskData.completed} onClick={checkTask} />
+          <CollapsibleTrigger>
+            {" "}
             <div>
               {!taskData.isNew ? (
                 <div
@@ -209,34 +220,46 @@ const TaskItem = ({
                 </>
               )}
             </div>
-            <div className="flex items-center">
-              <div>{moment(taskData.createdAt).format("DD/MM/YYYY")}</div>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <i className="icon-more"></i>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={changeType}
-                    >
-                      Set to{" "}
-                      {taskData.type === "personal"
-                        ? "Urgent To-Do"
-                        : "Personal Errands"}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="cursor-pointer text-red-600"
-                      onClick={deleteTask}
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+          </CollapsibleTrigger>
+        </div>
+        <div className="flex items-center">
+          <div className="pr-5">
+            {moment(
+              taskData.isNew ? taskData.createdAt : taskData.dueDate
+            ).format("DD/MM/YYYY")}
           </div>
+          <CollapsibleTrigger>
+            <i className="icon-arrow-down"></i>
+          </CollapsibleTrigger>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <i className="icon-more"></i>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={changeType}
+                >
+                  Set to{" "}
+                  {taskData.type === "personal"
+                    ? "Urgent To-Do"
+                    : "Personal Errands"}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer text-red-600"
+                  onClick={deleteTask}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+      <CollapsibleContent>
+        <form onSubmit={submitForm} className="space-y-3 pl-8">
+          <div className="flex justify-between items-start"></div>
           <div>
             <div className="flex items-center gap-x-3">
               <i
@@ -288,8 +311,8 @@ const TaskItem = ({
             </div>
           )}
         </form>
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 
