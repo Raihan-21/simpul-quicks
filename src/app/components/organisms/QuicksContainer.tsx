@@ -41,14 +41,6 @@ const QuicksContainer = () => {
       buttonColor: "light-gray",
       onClick: showMessageWindow,
     },
-    {
-      index: 3,
-      id: "search",
-      icon: "icon-search",
-      iconColor: "main-purple",
-      buttonColor: "light-gray",
-      onClick: showMessageWindow,
-    },
   ]);
 
   const openQuicks = async () => {

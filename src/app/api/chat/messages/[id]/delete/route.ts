@@ -11,7 +11,6 @@ export async function DELETE(
     const res = await Message.destroy({ where: { id: params.id } });
     return Response.json({ data: res });
   } catch (error) {
-    console.log(error);
     return Response.json({ error }, { status: 500 });
   }
 }

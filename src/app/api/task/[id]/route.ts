@@ -31,12 +31,6 @@ export async function PUT(
     );
     return Response.json({ data: res });
   } catch (error) {
-    console.log(error);
     return Response.json({ error }, { status: 500 });
   }
-  // try {
-  //   const res = await Task.create()
-  // } catch (error) {
-
-  // }
 }

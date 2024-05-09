@@ -33,7 +33,6 @@ export async function GET(
     const finalRes = await Promise.all(response);
     return Response.json({ data: finalRes });
   } catch (error) {
-    console.log(error);
     return Response.json({ error }, { status: 500 });
   }
 }

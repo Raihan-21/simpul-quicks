@@ -18,7 +18,6 @@ export async function GET(
     );
     return Response.json({ data: res[0] });
   } catch (error) {
-    console.log(error);
     return Response.json({ error }, { status: 500 });
   }
 }
@@ -36,7 +35,6 @@ export async function POST(
     });
     return Response.json({ data: res });
   } catch (error) {
-    console.log(error);
     return Response.json({ error }, { status: 500 });
   }
 }

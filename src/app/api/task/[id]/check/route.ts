@@ -10,7 +10,6 @@ export async function PUT(
   try {
     const { completed } = await req.json();
     const res = await Task.update({ completed }, { where: { id: params.id } });
-    console.log(res);
     return Response.json({ data: res });
   } catch (error) {
     return Response.json({ error }, { status: 500 });

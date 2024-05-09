@@ -84,6 +84,7 @@ const ChatWindow = () => {
                   aria-label="Loading Spinner"
                   data-testid="loader"
                 >
+                  {/* Cannot position this in the middle vertically because of custom scrollbar */}
                   <ClipLoader color="#C4C4C4" size={50} />
                   Loading chats...
                 </div>

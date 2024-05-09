@@ -33,7 +33,7 @@ const ChatBubble = ({
   return (
     <div>
       {isSender ? (
-        <div className="flex flex-col items-end ">
+        <div className="flex flex-col items-end pt-[12px]">
           <div className="capitalize text-second-purple font-bold">
             {data.user.name}
           </div>

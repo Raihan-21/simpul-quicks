@@ -28,13 +28,6 @@ const Quicks = ({
   const [isQuickClicked, setIsQuickClicked] = useState<boolean>(false);
   const [activeQuick, setActiveQuick] = useState<Quick>();
 
-  const calculateQuickGaps = (id: string, index: number) => {
-    const quickSpace = "56px + 20px";
-    if (activeQuick?.id === id) return `0`;
-    if (isQuickClicked && index > activeQuick!.index)
-      return `calc(-${index} * (${quickSpace}) + ${quickSpace}`;
-    return `calc(-${index} * (${quickSpace})`;
-  };
   const calculateQuickGapsAnimation = (id: string, index: number) => {
     const quickSpace = 56 + 20;
     if (activeQuick?.id === id) return 0;
