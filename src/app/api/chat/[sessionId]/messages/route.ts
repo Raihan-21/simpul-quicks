@@ -11,7 +11,7 @@ export async function GET(
 ) {
   try {
     const res = await sequelize.query(
-      "SELECT messages.*, row_to_json(users.*) as user FROM messages JOIN users ON messages.id_user = users.id WHERE messages.id_chat_session = :sessionId",
+      "SELECT messages.*, row_to_json(users.*) as user FROM messages JOIN users ON messages.id_user = users.id WHERE messages.id_chat_session = :sessionId ORDER BY created_at ASC",
       {
         replacements: { sessionId: params.sessionId },
       }

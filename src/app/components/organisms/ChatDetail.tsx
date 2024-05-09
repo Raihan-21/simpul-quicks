@@ -61,16 +61,8 @@ const ChatDetail = ({
       setIsLoading(false);
     }
   };
-  const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+  const sendmessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isEditing) {
-      await sendMessage();
-      return;
-    }
-    saveMessage();
-  };
-
-  const sendMessage = async () => {
     if (!message) return;
     try {
       setMessage("");
@@ -157,7 +149,6 @@ const ChatDetail = ({
       console.log(error.response.data);
     }
   };
-  const saveMessage = async () => {};
 
   const formatChatDate = (date: Date) => {
     if (
@@ -229,10 +220,6 @@ const ChatDetail = ({
                         data={data}
                         //Using name as unique id because there is no authentication
                         isSender={data.user.id === 4}
-                        onEdit={(id, date, content) => {
-                          // setIsEditing(true);
-                          // setMessage(content);
-                        }}
                         onDelete={(id, date) => {
                           setMessageData(
                             messageData.map((messages: ChatList) => {
@@ -255,10 +242,7 @@ const ChatDetail = ({
         <div ref={chatArea} className="h-0"></div>
       </ScrollArea>
       <div className="absolute bottom-0 w-full px-[32px] py-[24px]">
-        <form
-          className="flex justify-between gap-x-5 "
-          onSubmit={submitMessage}
-        >
+        <form className="flex justify-between gap-x-5 " onSubmit={sendmessage}>
           <Input
             placeholder="Type a new message"
             className="border-[1px] border-black"

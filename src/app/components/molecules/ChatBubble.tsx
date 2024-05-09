@@ -16,17 +16,12 @@ import {
 const ChatBubble = ({
   data,
   isSender,
-  onEdit,
   onDelete,
 }: {
   data: ChatMessage;
   isSender: boolean;
-  onEdit: (id: number, date: Date, content: string) => void;
   onDelete: (id: number, date: Date) => void;
 }) => {
-  const editMessage = (id: number, date: Date, content: string) => {
-    onEdit(id, date, content);
-  };
   const deleteMessage = async () => {
     try {
       const res = await axiosInstance.delete(
@@ -52,14 +47,6 @@ const ChatBubble = ({
               <DropdownMenuContent>
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() =>
-                      editMessage(data.id, data.created_at, data.content)
-                    }
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
                     className="cursor-pointer text-red-500"
                     onClick={deleteMessage}
                   >
@@ -78,7 +65,7 @@ const ChatBubble = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col pt-[12px]">
           <div className="capitalize text-dark-orange font-bold">
             {data.user.name}
           </div>
