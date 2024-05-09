@@ -152,7 +152,7 @@ const ChatDetail = ({
 
   const formatChatDate = (date: Date) => {
     if (
-      moment(date).format("DD//MM/YYYY") ==
+      moment(date).format("DD/MM/YYYY") ==
       moment(new Date()).format("DD/MM/YYYY")
     ) {
       return `Today ${moment(date).format("LL")}`;
