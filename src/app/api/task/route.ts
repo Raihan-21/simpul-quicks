@@ -5,7 +5,7 @@ const Task = taskModel(sequelize, Sequelize.DataTypes);
 
 export async function GET(req: Request) {
   try {
-    const res = await Task.findAll({ order: [["created_at", "ASC"]] });
+    const res = await Task.findAll({ order: [["due_date", "ASC"]] });
     return Response.json({ data: res });
   } catch (error: any) {
     return Response.json({ error }, { status: 500 });

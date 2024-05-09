@@ -208,7 +208,7 @@ const ChatDetail = ({
           <div className="space-y-5">
             {messageData.length > 0 &&
               messageData.map((messages: ChatList, i: number) => (
-                <div className="pt-3">
+                <div className="pt-3" key={i}>
                   <div className="relative text-dark-gray">
                     <div className="border-b-[1px] border-dark-gray"></div>
 

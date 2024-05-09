@@ -160,6 +160,7 @@ const TasksWindow = () => {
               <div className="flex justify-center">Loading</div>
             ) : (
               <>
+                {/* Task item sorted by due date in backend */}
                 {filteredTask.length > 0 &&
                   filteredTask.map((task, i) => (
                     <TaskItem
