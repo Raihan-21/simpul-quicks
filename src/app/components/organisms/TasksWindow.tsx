@@ -32,6 +32,7 @@ import { Button } from "../ui/button";
  */
 
 import TaskItem from "../molecules/TaskItem";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const TasksWindow = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -157,7 +158,15 @@ const TasksWindow = () => {
           </div>
           <div className="mt-[22px]">
             {isLoading ? (
-              <div className="flex justify-center">Loading</div>
+              <div
+                className="flex flex-col items-center justify-center gap-y-3 mt-[22px] h-full"
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              >
+                {/* Cannot position this in the middle vertically because of custom scrollbar */}
+                <ClipLoader color="#C4C4C4" size={50} />
+                Loading Task List...
+              </div>
             ) : (
               <>
                 {/* Task item sorted by due date in backend */}
