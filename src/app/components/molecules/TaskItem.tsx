@@ -201,7 +201,7 @@ const TaskItem = ({
             <div>
               {!taskData.isNew ? (
                 <div
-                  className={`font-bold ${
+                  className={`font-bold text-start ${
                     taskData.completed && "line-through"
                   }`}
                 >
