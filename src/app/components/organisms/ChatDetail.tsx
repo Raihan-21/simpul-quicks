@@ -203,10 +203,10 @@ const ChatDetail = ({
             Loading messages...
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-3">
             {messageData.length > 0 &&
               messageData.map((messages: ChatList, i: number) => (
-                <div className="pt-3" key={i}>
+                <div className="pt-5" key={i}>
                   <div className="relative text-dark-gray">
                     <div className="border-b-[1px] border-dark-gray"></div>
 
