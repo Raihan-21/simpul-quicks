@@ -159,7 +159,7 @@ const TasksWindow = () => {
           <div className="">
             {isLoading ? (
               <div
-                className="mt-[22px] flex h-full flex-col items-center justify-center gap-y-3"
+                className="absolute left-[50%] top-[50%] mt-[22px] flex translate-x-[-50%] translate-y-[-100%] flex-col items-center justify-center gap-y-3"
                 aria-label="Loading Spinner"
                 data-testid="loader"
               >
