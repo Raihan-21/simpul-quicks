@@ -201,8 +201,8 @@ const TaskItem = ({
             <div>
               {!taskData.isNew ? (
                 <div
-                  className={`text-start font-bold ${
-                    taskData.completed && "line-through"
+                  className={`text-start font-bold text-dark-gray ${
+                    taskData.completed && "text-gray line-through"
                   }`}
                 >
                   {taskData.title}
