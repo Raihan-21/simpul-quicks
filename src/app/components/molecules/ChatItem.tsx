@@ -48,7 +48,7 @@ const ChatItem = ({
               <div className="text-sm">{data.lastMessage.content}</div>
             </div>
             {data.id === 1 && (
-              <div className="h-[10px] w-[10px] rounded-full bg-red-500"></div>
+              <div className="bg-main-red h-[10px] w-[10px] rounded-full"></div>
             )}
           </div>
         )}

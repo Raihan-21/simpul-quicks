@@ -57,7 +57,7 @@ const TasksWindow = () => {
         setFilteredTask(res.data.data);
       } else
         setFilteredTask(
-          res.data.data.filter((task: Task) => task.type === currentFilter)
+          res.data.data.filter((task: Task) => task.type === currentFilter),
         );
     } catch (error: any) {
       console.log(error.response.data);
@@ -99,7 +99,7 @@ const TasksWindow = () => {
           return { ...task, completed: value };
         }
         return { ...task };
-      })
+      }),
     );
     // setFilteredTask(
     //   filteredTask.map((task) => {
@@ -118,7 +118,7 @@ const TasksWindow = () => {
           return { ...task, type };
         }
         return { ...task };
-      })
+      }),
     );
     fetchTask();
   };
@@ -132,9 +132,9 @@ const TasksWindow = () => {
   }, [currentFilter]);
 
   return (
-    <div className="rounded-md min-w-[300px] w-full h-[500px]  !absolute -top-[515px] right-0 px-5">
-      <ScrollArea className="bg-white rounded-md h-full">
-        <div className=" px-[32px] py-[24px]">
+    <div className="!absolute -top-[515px] right-0 h-[31.25rem] w-full min-w-[18.75rem] rounded-md px-5">
+      <ScrollArea className="h-full rounded-md bg-white">
+        <div className="px-[29px] py-4">
           <div className="flex justify-between gap-x-5">
             <Select onValueChange={filterTask}>
               <SelectTrigger className="max-w-[100px]">
@@ -156,10 +156,10 @@ const TasksWindow = () => {
               New Task
             </Button>
           </div>
-          <div className="mt-[22px]">
+          <div className="">
             {isLoading ? (
               <div
-                className="flex flex-col items-center justify-center gap-y-3 mt-[22px] h-full"
+                className="mt-[22px] flex h-full flex-col items-center justify-center gap-y-3"
                 aria-label="Loading Spinner"
                 data-testid="loader"
               >

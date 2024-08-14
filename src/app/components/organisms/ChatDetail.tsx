@@ -258,11 +258,6 @@ const ChatDetail = ({
                         key={i}
                       />
                     ))}
-                  <div className="border-b-[1px] border-dark-gray"></div>
-
-                  <div className="absolute left-[50%] top-[50%] z-[1] translate-x-[-50%] translate-y-[-50%] bg-white px-5 font-bold">
-                    {formatChatDate(messages.created_at)}
-                  </div>
                 </div>
               ))}
           </div>

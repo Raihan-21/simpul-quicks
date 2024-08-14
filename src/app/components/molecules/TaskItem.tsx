@@ -191,10 +191,10 @@ const TaskItem = ({
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="border-b-[1px] border-gray py-[22px] text-dark-gray"
+      className="border-b-[1px] border-gray py-5 text-dark-gray"
     >
       <div className="flex w-full justify-between gap-x-5">
-        <div className="flex items-start gap-x-5">
+        <div className="flex items-start gap-x-[1.406rem]">
           <Checkbox checked={taskData.completed} onClick={checkTask} />
           <CollapsibleTrigger>
             {" "}
@@ -268,7 +268,7 @@ const TaskItem = ({
         <form onSubmit={submitForm} className="space-y-3 pl-8">
           <div className="flex items-start justify-between"></div>
           <div>
-            <div className="flex items-center gap-x-3">
+            <div className="flex items-center gap-x-[1.125rem]">
               <i
                 className={`icon-clock ${
                   taskData.dueDate ? "text-primary" : ""
@@ -280,7 +280,7 @@ const TaskItem = ({
               <div className="text-red-500">{errors.dueDate}</div>
             )}
           </div>
-          <div className="flex items-start gap-x-3">
+          <div className="flex items-start gap-x-[1.125rem]">
             <i
               className={`icon-pencil ${!isEditing ? "cursor-pointer" : ""} ${
                 data.description ? "text-primary" : ""

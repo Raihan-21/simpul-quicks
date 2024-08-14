@@ -47,7 +47,7 @@ const ChatWindow = () => {
       chats.filter((chat) => {
         if (!search) return chat;
         return chat.name?.toLowerCase().includes(search);
-      })
+      }),
     );
   };
   const back = () => {
@@ -60,13 +60,10 @@ const ChatWindow = () => {
   }, []);
 
   return (
-    <div
-      className=" min-w-[300px] w-full h-[500px] !absolute -top-[515px] right-0 px-5
-"
-    >
+    <div className="!absolute -top-[515px] right-0 h-[500px] w-full min-w-[300px] max-w-[708px] px-5">
       {activeTab === "list" ? (
-        <ScrollArea className="bg-white rounded-md h-full">
-          <div className=" px-[32px] py-[24px]">
+        <ScrollArea className="h-full rounded-md bg-white">
+          <div className="px-[29px] py-[24px]">
             <div>
               <div className="relative">
                 <form onSubmit={searchChat}>
@@ -76,11 +73,11 @@ const ChatWindow = () => {
                     onChange={(e) => setSearch(e.target.value)}
                   />
                 </form>
-                <i className="icon-search absolute top-3 right-3"></i>
+                <i className="icon-search absolute right-3 top-3"></i>
               </div>
               {isLoading ? (
                 <div
-                  className="flex flex-col items-center justify-center gap-y-3 mt-[22px]"
+                  className="mt-[22px] flex flex-col items-center justify-center gap-y-3"
                   aria-label="Loading Spinner"
                   data-testid="loader"
                 >
@@ -109,8 +106,8 @@ const ChatWindow = () => {
           </div>
         </ScrollArea>
       ) : (
-        <div className="bg-white rounded-md h-full">
-          <div className="  h-full max-h-full relative">
+        <div className="h-full rounded-md bg-white">
+          <div className="relative h-full max-h-full">
             <ChatDetail chatData={selectedChat!} onClickBack={back} />
           </div>
         </div>
