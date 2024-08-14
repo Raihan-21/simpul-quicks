@@ -193,7 +193,7 @@ const TaskItem = ({
       onOpenChange={setIsOpen}
       className="border-b-[1px] border-gray py-[22px] text-dark-gray"
     >
-      <div className="flex justify-between gap-x-5 w-full">
+      <div className="flex w-full justify-between gap-x-5">
         <div className="flex items-start gap-x-5">
           <Checkbox checked={taskData.completed} onClick={checkTask} />
           <CollapsibleTrigger>
@@ -201,7 +201,7 @@ const TaskItem = ({
             <div>
               {!taskData.isNew ? (
                 <div
-                  className={`font-bold text-start ${
+                  className={`text-start font-bold ${
                     taskData.completed && "line-through"
                   }`}
                 >
@@ -230,7 +230,7 @@ const TaskItem = ({
         <div className="flex items-center">
           <div className="pr-5">
             {moment(
-              taskData.isNew ? taskData.createdAt : taskData.dueDate
+              taskData.isNew ? taskData.createdAt : taskData.dueDate,
             ).format("DD/MM/YYYY")}
           </div>
           <CollapsibleTrigger>
@@ -266,11 +266,11 @@ const TaskItem = ({
       </div>
       <CollapsibleContent>
         <form onSubmit={submitForm} className="space-y-3 pl-8">
-          <div className="flex justify-between items-start"></div>
+          <div className="flex items-start justify-between"></div>
           <div>
             <div className="flex items-center gap-x-3">
               <i
-                className={`icon-clock  ${
+                className={`icon-clock ${
                   taskData.dueDate ? "text-primary" : ""
                 } `}
               ></i>
@@ -288,7 +288,7 @@ const TaskItem = ({
               onClick={() => setIsEditing(true)}
             ></i>
             {isEditing ? (
-              <div className="flex flex-col items-end gap-y-3 flex-grow">
+              <div className="flex flex-grow flex-col items-end gap-y-3">
                 <Textarea
                   className="w-full"
                   value={taskData.description}

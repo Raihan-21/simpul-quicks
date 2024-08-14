@@ -25,7 +25,7 @@ const ChatBubble = ({
   const deleteMessage = async () => {
     try {
       const res = await axiosInstance.delete(
-        `/api/chat/messages/${data.id}/delete`
+        `/api/chat/messages/${data.id}/delete`,
       );
       onDelete(data.id, data.created_at);
     } catch (error: any) {
@@ -36,10 +36,10 @@ const ChatBubble = ({
     <div>
       {isSender ? (
         <div className="flex flex-col items-end pt-[12px]">
-          <div className="capitalize text-second-purple font-bold">
+          <div className="font-bold capitalize text-second-purple">
             {data.user.name}
           </div>
-          <div className="flex items-start  ">
+          <div className="flex items-start">
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <i className="icon-more"></i>
@@ -56,7 +56,7 @@ const ChatBubble = ({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="rounded-[5px] p-[10px] bg-light-purple max-w-[400px]">
+            <div className="max-w-[400px] rounded-[5px] bg-light-purple p-[10px]">
               <div className="mb-2">{data.content}</div>
               <div className="text-sm">
                 {moment(data.created_at).format("hh:mm")}
@@ -66,14 +66,14 @@ const ChatBubble = ({
         </div>
       ) : (
         <div className="flex flex-col pt-[12px]">
-          <div className="capitalize text-dark-orange font-bold">
+          <div className="font-bold capitalize text-dark-orange">
             {data.user.name}
           </div>
-          <div className="flex flex-row-reverse justify-end items-start  ">
+          <div className="flex flex-row-reverse items-start justify-end">
             <button>
               <i className="icon-more"></i>
             </button>
-            <div className="rounded-sm p-[10px] bg-light-orange max-w-[400px]">
+            <div className="max-w-[400px] rounded-sm bg-light-orange p-[10px]">
               <div className="mb-2">{data.content}</div>
               <div className="text-sm">
                 {moment(data.created_at).format("hh:mm")}
