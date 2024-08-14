@@ -46,6 +46,7 @@ interface ChatMessage {
   id_user: number;
   user: User;
   id_chat_session: number;
+  has_read?: boolean;
   content: string;
   created_at: Date;
   updated_at: Date;

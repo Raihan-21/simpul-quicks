@@ -37,23 +37,44 @@ const ChatDetail = ({
   const fetchMessage = async ({ reload = true }: { reload?: boolean } = {}) => {
     if (reload) setIsLoading(true);
     try {
-      const res = await axiosInstance.get(`/api/chat/${chatData.id}/messages`);
+      let res = await axiosInstance.get(`/api/chat/${chatData.id}/messages`);
+
+      // Dummy nwe message\
+
+      res.data.data.push({
+        id: 10001,
+        id_chat_session: 1,
+        id_user: 1000,
+        content: "Morning. I’ll try to do them. Thanks",
+        user: {
+          id: 1000,
+          name: "Obaidullah Amarkhil",
+          created_at: new Date("2024-10-01").toISOString(),
+          updated_at: new Date("2024-10-01").toISOString(),
+        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      console.log(res.data.data);
       setMessageData(
         _.chain(
           res.data.data.map((data: ChatList) => ({
             ...data,
-            created_date: moment(data.created_at).format("DD/MM/YYYY"),
-          }))
+            created_date: moment(data.created_at).format("YYYY/MM/DD"),
+          })),
         )
 
           // Group messages by created date
 
           .groupBy("created_date")
-          .map((value, key) => ({
-            messages: value,
-            created_at: moment(key).format("DD/MM/YYYY"),
-          }))
-          .value()
+          .map((value, key) => {
+            console.log(key, moment(key).format("YYYY/MM/DD"));
+            return {
+              messages: value,
+              created_at: key,
+            };
+          })
+          .value(),
       );
     } catch (error: any) {
       console.log(error.response);
@@ -71,14 +92,14 @@ const ChatDetail = ({
         {
           idUser: 4,
           content: message,
-        }
+        },
       ); // Create new array of grouped chat if there is no messages today
       if (
         !messageData.length ||
         !(
           moment(messageData[messageData.length - 1].created_at).format(
-            "DD/MM/YYYY"
-          ) == moment(new Date()).format("DD/MM/YYYY")
+            "YYYY/MM/DD",
+          ) == moment(new Date()).format("YYYY/MM/DD")
         )
       ) {
         setMessageData((prevState: ChatList[]) => [
@@ -114,8 +135,8 @@ const ChatDetail = ({
         setMessageData(
           messageData.map((messages: ChatList) => {
             if (
-              moment(new Date(messages.created_at)).format("DD/MM/YYYY") ==
-              moment(new Date()).format("DD/MM/YYYY")
+              moment(new Date(messages.created_at)).format("YYYY/MM/DD") ==
+              moment(new Date()).format("YYYY/MM/DD")
             ) {
               return {
                 ...messages,
@@ -143,7 +164,7 @@ const ChatDetail = ({
               };
             }
             return { ...messages };
-          })
+          }),
         );
     } catch (error: any) {
       console.log(error.response.data);
@@ -151,17 +172,19 @@ const ChatDetail = ({
   };
 
   const formatChatDate = (date: Date) => {
+    console.log(new Date(date));
     if (
-      moment(date).format("DD/MM/YYYY") ==
-      moment(new Date()).format("DD/MM/YYYY")
+      moment(date).format("YYYY/MM/DD") ==
+      moment(new Date()).format("YYYY/MM/DD")
     ) {
       return `Today ${moment(date).format("LL")}`;
     }
-    return moment(date).format("dddd LL");
+    return moment(new Date(date)).format("dddd LL");
   };
 
   useEffect(() => {
     chatArea.current?.scrollIntoView({ behavior: "smooth" });
+    console.log(messageData);
   }, [messageData]);
 
   useEffect(() => {
@@ -174,7 +197,7 @@ const ChatDetail = ({
 
   return (
     <div className="relative h-full">
-      <div className="flex justify-between items-center pb-[24px] px-[32px] py-[24px] border-b-[1px] border-gray">
+      <div className="flex items-center justify-between border-b-[1px] border-gray px-[32px] py-[24px] pb-[24px]">
         <div className="flex items-center gap-x-4">
           <button
             onClick={() => {
@@ -184,17 +207,17 @@ const ChatDetail = ({
             <i className="icon-arrow-left"></i>
           </button>
           <div>
-            <div className="text-primary font-bold">{chatData.name}</div>
+            <div className="font-bold text-primary">{chatData.name}</div>
 
             {/* Static data placeholder because too complicated to build the db relation */}
             {chatData.is_group && <div className="text-sm">3 participants</div>}
           </div>
         </div>
       </div>
-      <ScrollArea className="chat-area flex-grow pt-5 h-[calc(100%-173px)]  px-[32px] pt-[24px]">
+      <ScrollArea className="chat-area h-[calc(100%-173px)] flex-grow px-[32px] pt-5 pt-[24px]">
         {isLoading ? (
           <div
-            className="flex flex-col items-center justify-center gap-y-3 mt-[22px] h-full"
+            className="mt-[22px] flex h-full flex-col items-center justify-center gap-y-3"
             aria-label="Loading Spinner"
             data-testid="loader"
           >
@@ -210,7 +233,7 @@ const ChatDetail = ({
                   <div className="relative text-dark-gray">
                     <div className="border-b-[1px] border-dark-gray"></div>
 
-                    <div className="font-bold z-[1] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white px-5">
+                    <div className="absolute left-[50%] top-[50%] z-[1] translate-x-[-50%] translate-y-[-50%] bg-white px-5 font-bold">
                       {formatChatDate(messages.created_at)}
                     </div>
                   </div>
@@ -226,15 +249,20 @@ const ChatDetail = ({
                               return {
                                 ...messages,
                                 messages: messages.messages.filter(
-                                  (message: ChatMessage) => message.id !== id
+                                  (message: ChatMessage) => message.id !== id,
                                 ),
                               };
-                            })
+                            }),
                           );
                         }}
                         key={i}
                       />
                     ))}
+                  <div className="border-b-[1px] border-dark-gray"></div>
+
+                  <div className="absolute left-[50%] top-[50%] z-[1] translate-x-[-50%] translate-y-[-50%] bg-white px-5 font-bold">
+                    {formatChatDate(messages.created_at)}
+                  </div>
                 </div>
               ))}
           </div>
@@ -242,7 +270,7 @@ const ChatDetail = ({
         <div ref={chatArea} className="h-0"></div>
       </ScrollArea>
       <div className="absolute bottom-0 w-full px-[32px] py-[24px]">
-        <form className="flex justify-between gap-x-5 " onSubmit={sendmessage}>
+        <form className="flex justify-between gap-x-5" onSubmit={sendmessage}>
           <Input
             placeholder="Type a new message"
             className="border-[1px] border-black"
