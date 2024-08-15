@@ -29,12 +29,17 @@ const ChatDetail = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // Using any data type because there is issue with lodash functions
-  const [messageData, setMessageData] = useState<any>({ messages: [] });
+  const [messageData, setMessageData] = useState<any>({
+    messages: [],
+    isUnread: false,
+    created_at: "",
+  });
 
   const [message, setMessage] = useState<string>("");
 
   const chatArea = useRef<HTMLDivElement | null>(null);
 
+  const hasUnread = useMesageStore((state: any) => state.hasUnread);
   const setHasUnread = useMesageStore((state: any) => state.setHasUnread);
 
   const fetchMessage = async ({ reload = true }: { reload?: boolean } = {}) => {
@@ -44,20 +49,20 @@ const ChatDetail = ({
 
       // Dummy nwe message\
 
-      res.data.data.push({
-        id: 10001,
-        id_chat_session: 1,
-        id_user: 1000,
-        content: "Morning. I’ll try to do them. Thanks",
-        user: {
-          id: 1000,
-          name: "Obaidullah Amarkhil",
-          created_at: new Date("2024-10-01").toISOString(),
-          updated_at: new Date("2024-10-01").toISOString(),
-        },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
+      // res.data.data.push({
+      //   id: 10001,
+      //   id_chat_session: 1,
+      //   id_user: 1000,
+      //   content: "Morning. I’ll try to do them. Thanks",
+      //   user: {
+      //     id: 1000,
+      //     name: "Obaidullah Amarkhil",
+      //     created_at: new Date("2024-10-01").toISOString(),
+      //     updated_at: new Date("2024-10-01").toISOString(),
+      //   },
+      //   created_at: new Date().toISOString(),
+      //   updated_at: new Date().toISOString(),
+      // });
       setMessageData(
         _.chain(
           res.data.data.map((data: ChatList) => ({
@@ -70,7 +75,7 @@ const ChatDetail = ({
 
           .groupBy("created_date")
           .map((value, key) => {
-            console.log(key, moment(key).format("YYYY/MM/DD"));
+            console.log(value);
             return {
               messages: value,
               created_at: key,
@@ -78,6 +83,29 @@ const ChatDetail = ({
           })
           .value(),
       );
+      setMessageData((prevState: any) => [
+        ...prevState,
+        {
+          messages: [
+            {
+              id: 10001,
+              id_chat_session: 1,
+              id_user: 1000,
+              content: "Morning. I’ll try to do them. Thanks",
+              user: {
+                id: 1000,
+                name: "Obaidullah Amarkhil",
+                created_at: new Date("2024-10-01").toISOString(),
+                updated_at: new Date("2024-10-01").toISOString(),
+              },
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            },
+          ],
+          isUnread: true,
+          created_at: moment(new Date()).format("YYYY/MM/DD"),
+        },
+      ]);
     } catch (error: any) {
       console.log(error.response);
     } finally {
@@ -174,7 +202,6 @@ const ChatDetail = ({
   };
 
   const formatChatDate = (date: Date) => {
-    console.log(new Date(date));
     if (
       moment(date).format("YYYY/MM/DD") ==
       moment(new Date()).format("YYYY/MM/DD")
@@ -203,7 +230,6 @@ const ChatDetail = ({
         <div className="flex items-center gap-x-4">
           <button
             onClick={() => {
-              setHasUnread(false);
               onClickBack();
             }}
           >
@@ -234,11 +260,23 @@ const ChatDetail = ({
               messageData.map((messages: ChatList, i: number) => (
                 <div className="pt-5" key={i}>
                   <div className="relative text-dark-gray">
-                    <div className="border-b-[1px] border-dark-gray"></div>
+                    {messages.isUnread ? (
+                      <>
+                        <div className="border-b-[1px] border-main-red"></div>
 
-                    <div className="absolute left-[50%] top-[50%] z-[1] translate-x-[-50%] translate-y-[-50%] bg-white px-5 font-bold">
-                      {formatChatDate(messages.created_at)}
-                    </div>
+                        <div className="absolute left-[50%] top-[50%] z-[1] translate-x-[-50%] translate-y-[-50%] bg-white px-5 font-bold text-main-red">
+                          New Messages
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="border-b-[1px] border-dark-gray"></div>
+
+                        <div className="absolute left-[50%] top-[50%] z-[1] translate-x-[-50%] translate-y-[-50%] bg-white px-5 font-bold">
+                          {formatChatDate(messages.created_at)}
+                        </div>
+                      </>
+                    )}
                   </div>
                   {messages.messages.length > 0 &&
                     messages.messages.map((data: ChatMessage, i: number) => (

@@ -53,6 +53,7 @@ interface ChatMessage {
 }
 
 interface ChatList {
+  isUnread?: boolean;
   created_at: Date;
   messages: ChatMessage[];
 }
