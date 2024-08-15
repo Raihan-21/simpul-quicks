@@ -1,7 +1,8 @@
 import moment from "moment";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { ChatSession } from "@/app/types";
+import useMesageStore from "@/app/store/messages";
 
 const ChatItem = ({
   data,
@@ -10,6 +11,7 @@ const ChatItem = ({
   data: ChatSession;
   withBorder: boolean;
 }) => {
+  const hasUnreadMessage = useMesageStore((state: any) => state.hasUnread);
   return (
     <div
       className={`flex items-center gap-x-5 py-[22px] ${
@@ -47,8 +49,8 @@ const ChatItem = ({
               </div>
               <div className="text-sm">{data.lastMessage.content}</div>
             </div>
-            {data.id === 1 && (
-              <div className="bg-main-red h-[10px] w-[10px] rounded-full"></div>
+            {data.id === 1 && hasUnreadMessage && (
+              <div className="h-[10px] w-[10px] rounded-full bg-main-red"></div>
             )}
           </div>
         )}

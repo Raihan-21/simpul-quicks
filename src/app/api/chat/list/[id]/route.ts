@@ -25,6 +25,7 @@ export async function GET(
             replacements: { sessionId: chat.id },
           }
         );
+        console.log(chat)
         return { ...chat, lastMessage: messageRes[0][0] };
       } catch (error) {
         console.log(error);

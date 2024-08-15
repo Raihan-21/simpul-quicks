@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 
 import ChatBubble from "../molecules/ChatBubble";
 import moment from "moment";
+import useMesageStore from "@/app/store/messages";
 
 const ChatDetail = ({
   chatData,
@@ -33,6 +34,8 @@ const ChatDetail = ({
   const [message, setMessage] = useState<string>("");
 
   const chatArea = useRef<HTMLDivElement | null>(null);
+
+  const setHasUnread = useMesageStore((state: any) => state.setHasUnread);
 
   const fetchMessage = async ({ reload = true }: { reload?: boolean } = {}) => {
     if (reload) setIsLoading(true);
@@ -55,7 +58,6 @@ const ChatDetail = ({
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       });
-      console.log(res.data.data);
       setMessageData(
         _.chain(
           res.data.data.map((data: ChatList) => ({
@@ -201,6 +203,7 @@ const ChatDetail = ({
         <div className="flex items-center gap-x-4">
           <button
             onClick={() => {
+              setHasUnread(false);
               onClickBack();
             }}
           >
