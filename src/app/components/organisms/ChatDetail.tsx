@@ -18,6 +18,37 @@ import ChatBubble from "../molecules/ChatBubble";
 import moment from "moment";
 import useMesageStore from "@/app/store/messages";
 
+const dummyData = [
+  {
+    id: 1,
+    id_user: 2,
+    user: {
+      id: 2,
+      name: "Odion ighalo",
+      created_at: "",
+      updated_at: "",
+    },
+    id_chat_session: 1,
+    content: "Hi, how are you today>",
+    created_at: new Date("2024-01-08").toISOString(),
+    updated_at: new Date("2024-01-08").toISOString(),
+  },
+  {
+    id: 2,
+    id_user: 1,
+    user: {
+      id: 1,
+      name: "You",
+      created_at: new Date("2023-12-01").toISOString(),
+      updated_at: new Date("2023-12-01").toISOString(),
+    },
+    id_chat_session: 1,
+    content: "I'm fine thanks",
+    created_at: new Date("2024-01-08").toISOString(),
+    updated_at: new Date("2024-01-08").toISOString(),
+  },
+];
+
 const ChatDetail = ({
   chatData,
   onClickBack,
@@ -29,11 +60,13 @@ const ChatDetail = ({
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // Using any data type because there is issue with lodash functions
-  const [messageData, setMessageData] = useState<any>({
-    messages: [],
-    isUnread: false,
-    created_at: "",
-  });
+  const [messageData, setMessageData] = useState<any>([
+    // {
+    //   messages: [],
+    //   isUnread: false,
+    //   created_at: "",
+    // },
+  ]);
 
   const [message, setMessage] = useState<string>("");
 
@@ -44,9 +77,10 @@ const ChatDetail = ({
 
   const fetchMessage = async ({ reload = true }: { reload?: boolean } = {}) => {
     if (reload) setIsLoading(true);
+    console.log("RELOAD", reload);
     try {
-      let res = await axiosInstance.get(`/api/chat/${chatData.id}/messages`);
-
+      let res = await localStorage.getItem("quicks-messages");
+      const localMessages = JSON.parse(res!);
       // Dummy nwe message\
 
       // res.data.data.push({
@@ -65,7 +99,7 @@ const ChatDetail = ({
       // });
       setMessageData(
         _.chain(
-          res.data.data.map((data: ChatList) => ({
+          localMessages.map((data: ChatList) => ({
             ...data,
             created_date: moment(data.created_at).format("YYYY/MM/DD"),
           })),
@@ -109,21 +143,118 @@ const ChatDetail = ({
     } catch (error: any) {
       console.log(error.response);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false), 2000;
+      });
     }
+    // try {
+    //   let res = await axiosInstance.get(`/api/chat/${chatData.id}/messages`);
+
+    //   // Dummy nwe message\
+
+    //   // res.data.data.push({
+    //   //   id: 10001,
+    //   //   id_chat_session: 1,
+    //   //   id_user: 1000,
+    //   //   content: "Morning. I’ll try to do them. Thanks",
+    //   //   user: {
+    //   //     id: 1000,
+    //   //     name: "Obaidullah Amarkhil",
+    //   //     created_at: new Date("2024-10-01").toISOString(),
+    //   //     updated_at: new Date("2024-10-01").toISOString(),
+    //   //   },
+    //   //   created_at: new Date().toISOString(),
+    //   //   updated_at: new Date().toISOString(),
+    //   // });
+    //   setMessageData(
+    //     _.chain(
+    //       res.data.data.map((data: ChatList) => ({
+    //         ...data,
+    //         created_date: moment(data.created_at).format("YYYY/MM/DD"),
+    //       })),
+    //     )
+
+    //       // Group messages by created date
+
+    //       .groupBy("created_date")
+    //       .map((value, key) => {
+    //         console.log(value);
+    //         return {
+    //           messages: value,
+    //           created_at: key,
+    //         };
+    //       })
+    //       .value(),
+    //   );
+    //   setMessageData((prevState: any) => [
+    //     ...prevState,
+    //     {
+    //       messages: [
+    //         {
+    //           id: 10001,
+    //           id_chat_session: 1,
+    //           id_user: 1000,
+    //           content: "Morning. I’ll try to do them. Thanks",
+    //           user: {
+    //             id: 1000,
+    //             name: "Obaidullah Amarkhil",
+    //             created_at: new Date("2024-10-01").toISOString(),
+    //             updated_at: new Date("2024-10-01").toISOString(),
+    //           },
+    //           created_at: new Date().toISOString(),
+    //           updated_at: new Date().toISOString(),
+    //         },
+    //       ],
+    //       isUnread: true,
+    //       created_at: moment(new Date()).format("YYYY/MM/DD"),
+    //     },
+    //   ]);
+    // } catch (error: any) {
+    //   console.log(error.response);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
   const sendmessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!message) return;
     try {
       setMessage("");
-      const res = await axiosInstance.post(
-        `/api/chat/${chatData.id}/messages`,
-        {
-          idUser: 4,
-          content: message,
+      const res = await axiosInstance.post("https://reqres.in/api/messages", {
+        idUser: 1,
+        content: message,
+      });
+      console.log(res.data);
+      // const res = await axiosInstance.post(
+      //   `/api/chat/${chatData.id}/messages`,
+      //   {
+      //     idUser: 4,
+      //     content: message,
+      //   },
+      // );
+
+      const messageBody = {
+        id: res.data.id,
+        // prevState.length > 0
+        //   ? prevState[prevState.length - 1].messages[
+        //       prevState[prevState.length - 1].messages.length - 1
+        //     ].id + 1
+        //   : 1,
+        id_user: 1,
+        // id_user: 4,
+        id_chat_session: chatData.id,
+        user: {
+          id: 1,
+          // id: 4,
+          name: "You",
+          created_at: new Date("2024-05-06T07:50:46.97+00:00"),
+          updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
         },
-      ); // Create new array of grouped chat if there is no messages today
+        content: message,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+      // Create new array of grouped chat if there is no messages today
       if (
         !messageData.length ||
         !(
@@ -137,25 +268,28 @@ const ChatDetail = ({
           {
             created_at: new Date(),
             messages: [
-              {
-                id: res.data.data.id,
-                // prevState.length > 0
-                //   ? prevState[prevState.length - 1].messages[
-                //       prevState[prevState.length - 1].messages.length - 1
-                //     ].id + 1
-                //   : 1,
-                id_user: 4,
-                id_chat_session: chatData.id,
-                user: {
-                  id: 4,
-                  name: "You",
-                  created_at: new Date("2024-05-06T07:50:46.97+00:00"),
-                  updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
-                },
-                content: message,
-                created_at: new Date(),
-                updated_at: new Date(),
-              },
+              messageBody,
+              // {
+              //   id: res.data.data.id,
+              //   // prevState.length > 0
+              //   //   ? prevState[prevState.length - 1].messages[
+              //   //       prevState[prevState.length - 1].messages.length - 1
+              //   //     ].id + 1
+              //   //   : 1,
+              //   id_user: 1,
+              //   // id_user: 4,
+              //   id_chat_session: chatData.id,
+              //   user: {
+              //     id: 1,
+              //     // id: 4,
+              //     name: "You",
+              //     created_at: new Date("2024-05-06T07:50:46.97+00:00"),
+              //     updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
+              //   },
+              //   content: message,
+              //   created_at: new Date(),
+              //   updated_at: new Date(),
+              // },
             ],
           },
         ]);
@@ -172,32 +306,42 @@ const ChatDetail = ({
                 ...messages,
                 messages: [
                   ...messages.messages,
-
-                  {
-                    id: res.data.data.id,
-                    // messages.messages.length > 0
-                    //   ? messages.messages[messages.messages.length - 1].id + 1
-                    //   : 1,
-                    id_user: 4,
-                    id_chat_session: chatData.id,
-                    user: {
-                      id: 4,
-                      name: "You",
-                      created_at: new Date("2024-05-06T07:50:46.97+00:00"),
-                      updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
-                    },
-                    content: message,
-                    created_at: new Date(),
-                    updated_at: new Date(),
-                  },
+                  messageBody,
+                  // {
+                  //   id: res.data.data.id,
+                  //   // messages.messages.length > 0
+                  //   //   ? messages.messages[messages.messages.length - 1].id + 1
+                  //   //   : 1,
+                  //   id_user: 1,
+                  //   // id_user: 4,
+                  //   id_chat_session: chatData.id,
+                  //   user: {
+                  //     id: 1,
+                  //     // id: 4,
+                  //     name: "You",
+                  //     created_at: new Date("2024-05-06T07:50:46.97+00:00"),
+                  //     updated_at: new Date("2024-05-06T07:50:46.97+00:00"),
+                  //   },
+                  //   content: message,
+                  //   created_at: new Date(),
+                  //   updated_at: new Date(),
+                  // },
                 ],
               };
             }
+
             return { ...messages };
           }),
         );
+      const messageStorage = JSON.parse(
+        localStorage.getItem("quicks-messages")!,
+      );
+      localStorage.setItem(
+        "quicks-messages",
+        JSON.stringify([...messageStorage, messageBody]),
+      );
     } catch (error: any) {
-      console.log(error.response.data);
+      console.log(error);
     }
   };
 
@@ -213,7 +357,7 @@ const ChatDetail = ({
 
   useEffect(() => {
     chatArea.current?.scrollIntoView({ behavior: "smooth" });
-    console.log(messageData);
+    console.log("MESSAGE DATA", messageData);
   }, [messageData]);
 
   useEffect(() => {
@@ -221,6 +365,9 @@ const ChatDetail = ({
   }, [isLoading]);
 
   useEffect(() => {
+    const messageData = localStorage.getItem("quicks-messages");
+    if (!messageData)
+      localStorage.setItem("quicks-messages", JSON.stringify(dummyData));
     fetchMessage();
   }, []);
 
@@ -283,7 +430,7 @@ const ChatDetail = ({
                       <ChatBubble
                         data={data}
                         //Using name as unique id because there is no authentication
-                        isSender={data.user.id === 4}
+                        isSender={data.user.id === 4 || data.user.id === 1}
                         onDelete={(id, date) => {
                           setMessageData(
                             messageData.map((messages: ChatList) => {

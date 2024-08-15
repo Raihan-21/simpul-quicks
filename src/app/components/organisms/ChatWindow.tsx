@@ -15,6 +15,76 @@ import { Input } from "../ui/input";
 import ChatItem from "../molecules/ChatItem";
 import ChatDetail from "./ChatDetail";
 
+const dummyData = [
+  {
+    id: 1,
+    is_group: true,
+    lastMessage: {
+      id: 1,
+      id_user: 2,
+      user: {
+        id: 2,
+        name: "Odion ighalo",
+        created_at: new Date("2023-12-01"),
+        updated_at: new Date("2023-12-01"),
+      },
+      id_chat_session: 1,
+      content: "Hi, how are you today>",
+      created_at: new Date("2024-01-12"),
+      updated_at: new Date("2024-01-12"),
+    },
+
+    members: [],
+    name: "Simpul internal group",
+    created_at: new Date("2024-01-01"),
+    updated_at: new Date("2024-01-01"),
+  },
+  {
+    id: 2,
+    is_group: true,
+    lastMessage: {
+      id: 2,
+      id_user: 1,
+      user: {
+        id: 1,
+        name: "You",
+        created_at: new Date("2023-12-01"),
+        updated_at: new Date("2023-12-01"),
+      },
+      id_chat_session: 2,
+      content: "I'm fine thanks",
+      created_at: new Date("2024-01-08"),
+      updated_at: new Date("2024-01-08"),
+    },
+    members: [],
+    name: "Project group",
+    created_at: new Date("2024-01-07"),
+    updated_at: new Date("2024-01-07"),
+  },
+  {
+    id: 3,
+    is_group: false,
+    lastMessage: {
+      id: 1,
+      id_user: 3,
+      user: {
+        id: 3,
+        name: "FastVisa Support",
+        created_at: "",
+        updated_at: "",
+      },
+      id_chat_session: 3,
+      content: "Hi, how are you today>",
+      created_at: new Date("2024-02-20"),
+      updated_at: new Date("2024-02-20"),
+    },
+    members: [],
+    name: "FastVisa Support",
+    created_at: new Date("2024-02-01"),
+    updated_at: new Date("2024-02-01"),
+  },
+];
+
 const ChatWindow = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -27,14 +97,27 @@ const ChatWindow = () => {
   const fetchChats = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance.get(`/api/chat//list/4`);
-      setChats(res.data.data);
-      setFilteredChats(res.data.data);
-    } catch (error: any) {
-      console.log(error.response.data);
+      const res = await localStorage.getItem("quicks-chats");
+      const chatsData = JSON.parse(res!);
+      console.log(chatsData);
+      setChats(chatsData);
+      setFilteredChats(chatsData);
+    } catch (error) {
+      console.log(error);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
+    // try {
+    //   const res = await axiosInstance.get(`/api/chat//list/4`);
+    //   setChats(res.data.data);
+    //   setFilteredChats(res.data.data);
+    // } catch (error: any) {
+    //   console.log(error.response.data);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
   const clickDetail = (chat: ChatSession) => {
     setSelectedChat(chat);
@@ -56,8 +139,15 @@ const ChatWindow = () => {
   };
 
   useEffect(() => {
+    const localStorageData = localStorage.getItem("quicks-chats");
+    if (!localStorageData)
+      localStorage.setItem("quicks-chats", JSON.stringify(dummyData));
+    // console.log("LOCAL STORAGE DATA", localStorageData);
     fetchChats();
   }, []);
+  useEffect(() => {
+    console.log(filteredChats);
+  }, [filteredChats]);
 
   return (
     <div className="!absolute -top-[515px] right-0 h-[500px] w-full min-w-[300px] max-w-[708px] px-5">
