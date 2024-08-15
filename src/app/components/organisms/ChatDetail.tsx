@@ -47,6 +47,34 @@ const dummyData = [
     created_at: new Date("2024-01-08").toISOString(),
     updated_at: new Date("2024-01-08").toISOString(),
   },
+  {
+    id: 3,
+    id_user: 1,
+    user: {
+      id: 1,
+      name: "You",
+      created_at: new Date("2023-12-01").toISOString(),
+      updated_at: new Date("2023-12-01").toISOString(),
+    },
+    id_chat_session: 2,
+    content: "Good evening guys",
+    created_at: new Date("2024-01-08").toISOString(),
+    updated_at: new Date("2024-01-08").toISOString(),
+  },
+  {
+    id: 4,
+    id_user: 1,
+    user: {
+      id: 3,
+      name: "FastVisa Support",
+      created_at: new Date("2023-11-05").toISOString(),
+      updated_at: new Date("2023-11-05").toISOString(),
+    },
+    id_chat_session: 3,
+    content: "I'm fine thanks",
+    created_at: new Date("2024-01-08").toISOString(),
+    updated_at: new Date("2024-01-08").toISOString(),
+  },
 ];
 
 const ChatDetail = ({
@@ -77,7 +105,6 @@ const ChatDetail = ({
 
   const fetchMessage = async ({ reload = true }: { reload?: boolean } = {}) => {
     if (reload) setIsLoading(true);
-    console.log("RELOAD", reload);
     try {
       let res = await localStorage.getItem("quicks-messages");
       const localMessages = JSON.parse(res!);
@@ -99,17 +126,18 @@ const ChatDetail = ({
       // });
       setMessageData(
         _.chain(
-          localMessages.map((data: ChatList) => ({
-            ...data,
-            created_date: moment(data.created_at).format("YYYY/MM/DD"),
-          })),
+          localMessages
+            .filter((message: any) => message.id_chat_session === chatData.id)
+            .map((data: ChatList) => ({
+              ...data,
+              created_date: moment(data.created_at).format("YYYY/MM/DD"),
+            })),
         )
 
           // Group messages by created date
 
           .groupBy("created_date")
           .map((value, key) => {
-            console.log(value);
             return {
               messages: value,
               created_at: key,
@@ -224,7 +252,6 @@ const ChatDetail = ({
         idUser: 1,
         content: message,
       });
-      console.log(res.data);
       // const res = await axiosInstance.post(
       //   `/api/chat/${chatData.id}/messages`,
       //   {
@@ -357,7 +384,7 @@ const ChatDetail = ({
 
   useEffect(() => {
     chatArea.current?.scrollIntoView({ behavior: "smooth" });
-    console.log("MESSAGE DATA", messageData);
+    // console.log("MESSAGE DATA", messageData);
   }, [messageData]);
 
   useEffect(() => {
@@ -365,6 +392,7 @@ const ChatDetail = ({
   }, [isLoading]);
 
   useEffect(() => {
+    console.log("CHAT DETAIL", chatData);
     const messageData = localStorage.getItem("quicks-messages");
     if (!messageData)
       localStorage.setItem("quicks-messages", JSON.stringify(dummyData));
